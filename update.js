@@ -6,11 +6,11 @@ if (fs.existsSync("docusaurus")) {
   fs.rmSync("docusaurus", { recursive: true });
 }
 
-if (fs.existsSync("landing-site")) {
-  fs.rmSync("landing-site", { recursive: true });
-}
-
 if (process.env.SKIP_CLONE !== "true") {
+  if (fs.existsSync("landing-site")) {
+    fs.rmSync("landing-site", { recursive: true });
+  }
+
   execSync(
     `git clone https://oauth2:${process.env.GITHUB_TOKEN}@github.com/Incanta/redwood-landing-site.git landing-site`,
     {
