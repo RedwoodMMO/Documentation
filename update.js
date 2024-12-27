@@ -41,6 +41,13 @@ for (const folder of blogFolders) {
   }
 }
 
-execSync(
-  `git add docusaurus && git commit -m "${process.env.COMMIT_MESSAGE || "Update mirror"}" && git push -u origin main`
-);
+try {
+  execSync(
+    `git add docusaurus && git commit -m "${process.env.COMMIT_MESSAGE || "Update mirror"}" && git push -u origin main`,
+    {
+      encoding: "utf-8",
+    }
+  );
+} catch (e) {
+  // do nothing if we error
+}
