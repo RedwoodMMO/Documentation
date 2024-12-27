@@ -10,7 +10,12 @@ if (fs.existsSync("landing-site")) {
   fs.rmSync("landing-site", { recursive: true });
 }
 
-execSync("git clone git@github.com:Incanta/redwood-landing-site.git landing-site");
+execSync(
+  `git clone https://oauth2:${process.env.GITHUB_TOKEN}@github.com/Incanta/redwood-landing-site.git landing-site`,
+  {
+    // stdio: "ignore"
+  }
+);
 
 fs.cpSync("landing-site/docusaurus", "docusaurus", { recursive: true });
 
