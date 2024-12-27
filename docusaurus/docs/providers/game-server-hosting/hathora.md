@@ -60,7 +60,7 @@ You can generate a Hathora Developer Token by following their guide [here](https
 
 ### Region Blacklist
 
-By default, Redwood will list all Hathora cloud regions as available regions for servers to be created with lobbies or match-making. You can optionally specify a list of strings in the `game-servers.hathora.regions.blacklist` Realm Instance Config variable if you want to omit one or more regions from showing up (perhaps you only want to have 1-2 regions in the US for low CCUs). Below is an example where the `Los_Angeles` region would be omitted:
+By default, Redwood will list all Hathora cloud regions as available regions for servers to be created with lobbies or matchmaking. You can optionally specify a list of strings in the `game-servers.hathora.regions.blacklist` Realm Instance Config variable if you want to omit one or more regions from showing up (perhaps you only want to have 1-2 regions in the US for low CCUs). Below is an example where the `Los_Angeles` region would be omitted:
 
 ``` yaml
 regions:

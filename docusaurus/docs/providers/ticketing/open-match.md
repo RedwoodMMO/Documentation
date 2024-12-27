@@ -16,7 +16,7 @@ Redwood currently doesn't support [backfills](https://openmatch.dev/site/docs/gu
 
 ### Common
 
-Both [Simple Match](./simple-match.md) and Open Match providers share some common matchmaking config variables. You can find these in `RedwoodBackend/config/node/default/ticketing/match-making/_index.yaml`, but here's a brief overview of each of them:
+Both [Simple Match](./simple-match.md) and Open Match providers share some common matchmaking config variables. You can find these in `RedwoodBackend/config/node/default/ticketing/matchmaking/_index.yaml`, but here's a brief overview of each of them:
 
 |Name|Description|
 |-|-|
@@ -30,7 +30,7 @@ You can configure the endpoints for the various Open Match backend services, but
 
 ``` yaml
 ticketing:
-  match-making:
+  matchmaking:
     open-match:
       match-function:
         # Equal numbers means equal preference, increase a number to favor it more

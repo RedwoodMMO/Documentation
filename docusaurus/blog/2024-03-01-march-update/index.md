@@ -19,7 +19,7 @@ The current main task has been maturing the Shooter template. This template was 
 - **Separated Redwood Blueprints** instead of modifying the Lyra ones directly to help integrate Lyra updates and show you what was changed.
 - **The UE interface to the Redwood Backend for clients is now a Subsystem** instead of a inheritable PlayerController.
 - **New title screen widgets that are cohesive with the Lyra template.**
-- **Added Lobby support.** Before only match-making was supported but now you can have players create and join public/private servers; stay tuned for a more detailed description of this new feature.
+- **Added Lobby support.** Before only matchmaking was supported but now you can have players create and join public/private servers; stay tuned for a more detailed description of this new feature.
 - **Added automated testing for the Backend services.** By testing the Backend services directly in NodeJS, development is 5-10x faster.
 - **The Backend services now use a logging framework** to appropriately separate log levels instead of writing directly to stdout.
 - Lots of small refactors to improve the DX of using and extending the Backend services.
