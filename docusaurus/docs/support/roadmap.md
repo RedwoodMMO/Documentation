@@ -4,8 +4,6 @@ sidebar_position: 1
 
 # Roadmap
 
-test
-
 You can find our roadmap on [GitHub](https://github.com/orgs/RedwoodMMO/projects/1/views/1), here's what each of the columns mean:
 
 - **Backlog**: These are things we plan to get to. Their priority can change frequently, so we haven't put priorities or estimated timelines.
