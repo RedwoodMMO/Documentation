@@ -11,13 +11,13 @@ import TabItem from '@theme/TabItem';
 - The onboarding experience is fairly painless (and Redwood makes it dead-simple)
 - The team is very developer friendly
 - They listen to their big and small customers alike and continue to push new features/fixes based on that feedback
-- The pricing is very affordable with a **free $500 credit that expires after 24 months**, reasonable pricing for low CCUs, and competitive pricing for large enterprise CCUs
+- Decent **free tier** that you can use in early development and smaller playtests; easily scales into priced pro tiers
 - They have several edge regions across the globe, giving you lower latency reach to your players without paying for several regional clusters
 
 Redwood provides a first-class integration with Hathora by using the `hathora` provider. This integration focuses on the [Room](https://hathora.dev/api#tag/RoomV2) API, and will later add support to automatically create Hathora Deployments via the Redwood deployment scripts. Redwood doesn't use Hathora's Lobby Service and instead provides a custom lobby solution that works with any hosting provider.
 
 <div class="center">
-  <a href="https://console.hathora.dev/" target="_blank"><button>Create a free Hathora account and receive $500 in free hosting credits</button></a>
+  <a href="https://console.hathora.dev/login" target="_blank"><button>Start using Hathora for Free</button></a>
 </div><br />
 
 :::note
