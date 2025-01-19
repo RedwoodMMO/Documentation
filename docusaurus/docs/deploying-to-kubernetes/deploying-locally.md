@@ -26,7 +26,7 @@ If you installed all of the [prerequisites](./prerequisites.md) properly, you're
 While it's not strictly required to set up a configuration environment for development for just getting started, it will be convenient to have it when you inevitably want to change something.
 
 1. Create a new folder in `config/node` for the Kubernetes dev environment (e.g. `redwood-demo-kubernetes` [k8s is a common abbreviation for Kubernetes])
-1. Create a `_config.json` file in that folder (e.g. `config/node/redwood-demo-kubernetes/_config.json`) with the `parentNames` pointing to the environment folder you created earlier **and** the provided `kubernetes` environment.
+1. Create a `_config.json` file in that folder (e.g. `config/node/redwood-demo-kubernetes/_config.json`) with the `parentNames` pointing to the provided `kubernetes` environment **and** the environment folder you created earlier.
 
     **For example:**
 
@@ -35,6 +35,10 @@ While it's not strictly required to set up a configuration environment for devel
       "parentNames": ["kubernetes", "redwood-demo"]
     }
     ```
+
+    :::warning
+    The order matters! The config system will read read these envs in order, overriding variables that were previously read in. You need to have `kubernetes` before your config env as shown above.
+    :::
 
     :::note
     You might have started to noticed the inheritance pattern we've been introducing for configuration. In our examples, we have the config env `redwood-demo-kubernetes` inherit from `redwood-demo`. Later, when we [deploy to a cloud](./deploying-remotely.md#redwood-configuration), you'll see that we'll introduce a config env `redwood-demo-production` that inherits from `redwood-demo-kubernetes`. This pattern isn't required, but it can prevent issues where a config variable was added for development but not for production.
