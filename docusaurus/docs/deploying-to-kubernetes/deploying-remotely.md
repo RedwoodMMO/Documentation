@@ -7,6 +7,10 @@ import TabItem from '@theme/TabItem';
 
 # Deploying to the Cloud
 
+:::danger
+Jan 19, 2025: These docs are outdated and incorrect! Please wait for an update within the next week or two. Thanks for your patience!
+:::
+
 :::warning
 You need to follow the steps to **[deploy locally](../deploying-to-kubernetes/deploying-locally.md)** before attempting to deploy to a cloud provider as that section covers some common configuration changes that this section extends on.
 :::
