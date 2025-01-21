@@ -73,8 +73,7 @@ Several logs will print to the console as the backend initializes; wait until yo
         :::warning
         If you see these buttons greyed out/disabled and a label saying `Connecting to backend...`, there are some a few common issues:
         - You have another application bound to the port `3001`
-        - You did not configure your [`hosts` file](#configure-hosts-file) properly to include `director.localhost`
-        - You did not change the `Director Uri` [project setting](#create-a-new-project) to include `:3001`
+        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `director.localhost`
         - You started PIE before the Dev Initiator hasn't finished initializing. The connection retry logic will get exponentially slower after each retry, so you may need to restart PIE
         :::
 
@@ -84,7 +83,7 @@ Several logs will print to the console as the backend initializes; wait until yo
         :::warning
         If you were able to register but the login process seems to hang for more than 5 seconds, you're likely having issues connecting to the Realm Frontend service. The common issues for that are similar:
         - You have another application bound to the port `3011`
-        - You did not configure your [`hosts` file](#configure-hosts-file) properly to include `realm-default.localhost`
+        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `realm-default.localhost`
         :::
 
     1. You should be able to see a `PLAY` button now:
@@ -138,8 +137,7 @@ Several logs will print to the console as the backend initializes; wait until yo
         :::warning
         If you see these buttons greyed out/disabled and a label saying `Connecting to backend...`, there are some a few common issues:
         - You have another application bound to the port `3001`
-        - You did not configure your [`hosts` file](#configure-hosts-file) properly to include `director.localhost`
-        - You did not change the `Director Uri` [project setting](#create-a-new-project) to include `:3001`
+        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `director.localhost`
         - You started PIE before the Dev Initiator hasn't finished initializing. The connection retry logic will get exponentially slower after each retry, so you may need to restart PIE
         :::
 
@@ -149,7 +147,7 @@ Several logs will print to the console as the backend initializes; wait until yo
         :::warning
         If you were able to register but the login process seems to hang for more than 5 seconds, you're likely having issues connecting to the Realm Frontend service. The common issues for that are similar:
         - You have another application bound to the port `3011`
-        - You did not configure your [`hosts` file](#configure-hosts-file) properly to include `realm-default.localhost`
+        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `realm-default.localhost`
         :::
 
     1. You should be able to see a dropdown and be able to create a character:

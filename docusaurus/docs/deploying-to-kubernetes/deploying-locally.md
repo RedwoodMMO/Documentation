@@ -211,11 +211,31 @@ Deploying locally for basic configurations is fairly straight forward:
 
 ## Testing
 
-Testing with a local Kubernetes deployment is very similar to testing without Kubernetes. The Unreal client tries to connect to the **Director Frontend** at `ws://localhost:3001`, so all you need to do is forward the port from within Rancher Desktop.
+### Connection
 
-![Port Forwarding Tab](/img/director-frontend-port-forward-1.jpg)
+When you're using Kubernetes to host the backend instead of the Dev Initiator, the client no longer connects to the backend on port `3001`. Instead, hostnames are used to figure out which microservice a request is supposed to route to. This is why we needed to set up our `director.localhost`/etc [hosts in Getting Started](../getting-started/installing#configure-hosts-file). This means you need to change the `Director Uri` setting that the client connects to.
 
-![Port Forwarding for Director Frontend](/img/director-frontend-port-forward-2.jpg)
+You can do this in your UE project's **Project Settings** under **Redwood** in the **Plugins** section. You'll find a variable named `Director Uri`; it needs to be changed to:
+
+```
+ws://director.localhost
+```
+
+:::info
+If you need to change the Director Uri setting for a packaged build, we've added a quick method to do this without messing with the `Saved` dir.
+
+Create a file named `redwood.json` in the project folder in your client packaged build (i.e. `path-to-packaged-build/Windows/YourProject/redwood.json`); this should be the same folder where you see `Binaries` and `Content` folders. Set the contents fo the file to:
+
+```json
+{
+  "directorUri": "ws://director.localhost"
+}
+```
+:::
+
+### Running a Test
+
+Testing the backend in a Kubernetes environment (locally or [remotely](./deploying-remotely.md)) are very similar. For match-based games (like the Shooter Template), you can get a game server running by doing matchmaking or lobby generation. For persistent games (like the RPG Template), you'll still need to use the same `yarn cli create-admin ...` and `yarn cli create-proxy ...` [commands that you used when running the backend via the Dev Initiator](../getting-started/running-with-backend.md#running-the-game) to startup a persistent server.
 
 ## Deploying to the Cloud
 
