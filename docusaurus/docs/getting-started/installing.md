@@ -228,7 +228,6 @@ As with any new Redwood project, you should create a new [config environment](..
 1. Set the contents of your `realm/instances/default.yaml` to the below; you can use this for any template project. In this config, we're:
 
     - Specifying new realm auth parameters. The secret shouldn't be shared externally to the studio, and doesn't support the [secrets system](../providers/secrets/overview.md) yet, so you're safe to commit this value in the meantime but otherwise treat it like a secret.
-    - Ensuring we use the [`local` game server provider](../providers/game-server-hosting/local.md)
     - Specifying the path to the Unreal Engine binaries folder and executable (change based on your version/OS. **Note:** our templates currently only work on 5.4+)
     - Specifying the path to the UE project file
     - Some updated matchmaking parameters:
@@ -241,8 +240,6 @@ As with any new Redwood project, you should create a new [config environment](..
       secret: "your-second-generated-uuid-here"
 
     game-servers:
-      provider: "local"
-
       ready-timeout-seconds: 120
 
       local:
