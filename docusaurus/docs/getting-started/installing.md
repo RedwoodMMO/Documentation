@@ -196,6 +196,8 @@ As with any new Redwood project, you should create a new [config environment](..
             matchmaking-zone-name: "main"
             min-players-for-matchmaking: 1
 
+            parent-profile-id: "overworld"
+
             data:
         ```
       </TabItem>
