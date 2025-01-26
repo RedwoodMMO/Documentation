@@ -79,6 +79,10 @@ This will require local admin privileges; you may need to request your IT sysadm
 
 ### Initial Configuration
 
+:::warning
+Any changes to the backend configuration require the backend to be restarted to take effect. This is the case regardless of how the backend is deployed (i.e. by restarting the Dev Initiator process or by restarting the corresponding Kubernetes pods).
+:::
+
 As with any new Redwood project, you should create a new [config environment](../configuration/overview.md#customization); we recommend a lowercase, snake (your_name) or kebab (your-name) case name. We'll be using the name `project-name` for this guide for the base environment and build on it as we introduce more environments.
 
 1. Create a folder in the `RedwoodBackend/config/node` folder with your config environment name (i.e. `RedwoodBackend/config/node/project-name`).
