@@ -41,7 +41,7 @@ You can configure this to used a packaged/cooked version of your game by changin
 game-servers:
   local:
     unreal:
-      path: "C:\\Path\\To\\MyGame\\builds"
+      path: "C:\\Path\\To\\MyGame\\builds\\WindowsServer\\MyGame\\Binaries\\Win64"
       executable: "MyGameServer.exe"
     project: ""
 ```
