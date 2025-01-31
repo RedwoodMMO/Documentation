@@ -21,11 +21,9 @@ Currently the **Standard License** option only works for Windows development mac
     ./dev-initiator-win <your-config-env>
     ```
 
-    :::info
     The specific syntax of whether you include the `./` or not may be dependent on your terminal.
 
     macOS and Linux users can use `dev-initiator-mac` and `dev-initiator-lin` instead, respectively.
-    :::
   </TabItem>
   <TabItem value="custom" label="Custom License">
     You can run the Dev Initiator with running the below command in the `RedwoodBackend` directory:
