@@ -15,21 +15,17 @@ Currently the **Standard License** option only works for Windows development mac
 
 <Tabs>
   <TabItem value="standard" label="Standard License" default>
-    Modify `RedwoodBackend/config-settings.json` so the `defaults.env` field uses the configuration environment you [created earlier](./installing.md#initial-configuration) (e.g. `project-name`):
+    Open a terminal and navigate to the `RedwoodBackend` directory. Run the below command after replacing `<your-config-env>` with the name of the config folder you created earlier:
 
-    ```json
-    {
-      //...
-      "defaults": {
-        "dir": "config/node",
-        "env": "project-name"
-      }
-    }
+    ```bash
+    ./dev-initiator-win <your-config-env>
     ```
 
-    You can run the `dev-initiator.exe` file in the `RedwoodBackend` directory via the terminal or double click on the `Run Dev.bat` script from File Explorer.
+    :::info
+    The specific syntax of whether you include the `./` or not may be dependent on your terminal.
 
-    If you run the `dev-initiator.exe` program from a terminal, make sure to start it from the `RedwoodBackend` directory.
+    macOS and Linux users can use `dev-initiator-mac` and `dev-initiator-lin` instead, respectively.
+    :::
   </TabItem>
   <TabItem value="custom" label="Custom License">
     You can run the Dev Initiator with running the below command in the `RedwoodBackend` directory:

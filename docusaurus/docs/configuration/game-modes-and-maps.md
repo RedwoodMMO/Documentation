@@ -70,8 +70,11 @@ The Redwood Backend configures the Game Modes and Maps under the `game.profiles`
 
 - `id` is a unique identifier that Redwood uses to keep track of each profile; it's also used as `Redwood Id` in the Unreal [Game Mode DataAsset](#game-mode-asset)
 - `zones` is an object, containing a named object for each zone
+  - `variableCasing: "Original"` prevents unwanted transformation by our config system to ensure that `zone-name` stays as `zone-name` (and not transformed to `zoneName`). You can still use `zoneName` manually too.
   - `<zone-name>`
     - `maps` is an array of strings where each string associates with the corresponding `Redwood Id` variable you defined in the corresponding `URedwoodMapAsset`. A map will be randomly selected from this array.
+    - `syncItemsFromAllZones` is optional. If set to true, all items from all zones will be synced to this zone.
+    - `syncItemsFromZones` is optional. If set, all items from the specified zones will be synced to this zone.
 - `max-players-per-shard` is the maximum amount of players for a single game server instance (aka shard). It also serves as the maximum number of players that are allowed for matchmaking to consider a full match.
 - `num-players-to-add-shard` is the number of players per zone per shard to choose to add another shard for the zone. Not setting/setting to null will disable sharding.
 - `num-minutes-to-destroy-empty-shard` Set this variable if you want empty shards to be destroyed after so many minutes of remaining empty. If you want to try to incentivize players to move from low-population shards to medium-population shards to be more efficient with server costs, you'll need to implement additional game and/or backend logic.

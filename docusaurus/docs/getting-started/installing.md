@@ -128,6 +128,11 @@ As with any new Redwood project, you should create a new [config environment](..
           - id: "elimination"
 
             zones:
+              # We recommend including this field under zones to ensure that the
+              # name of a zone isn't transformed to camelCase (i.e. "my-zone" -> "myZone").
+              # When using this, make sure to use camelCase for other variables like syncItemsFromAllZones.
+              variableCasing: "original"
+
               main:
                 maps:
                   - "expanse"
@@ -143,6 +148,11 @@ As with any new Redwood project, you should create a new [config environment](..
           - id: "control"
 
             zones:
+              # We recommend including this field under zones to ensure that the
+              # name of a zone isn't transformed to camelCase (i.e. "my-zone" -> "myZone").
+              # When using this, make sure to use camelCase for other variables like syncItemsFromAllZones.
+              variableCasing: "original"
+
               main:
                 maps:
                   - "convolution"
@@ -162,16 +172,24 @@ As with any new Redwood project, you should create a new [config environment](..
           - id: "overworld"
 
             zones:
+              # We recommend including this field under zones to ensure that the
+              # name of a zone isn't transformed to camelCase (i.e. "my-zone" -> "myZone").
+              # When using this, make sure to use camelCase for other variables like syncItemsFromAllZones.
               variableCasing: "original"
+
               village:
                 maps:
                   - "overworld"
+                syncItemsFromZones:
+                  - "outskirts"
               outskirts:
                 maps:
                   - "overworld"
               mountain-pass:
                 maps:
                   - "overworld"
+                syncItemsFromZones:
+                  - "outskirts"
               forest:
                 maps:
                   - "overworld"
@@ -190,7 +208,11 @@ As with any new Redwood project, you should create a new [config environment](..
           - id: "instanced-dungeon"
 
             zones:
+              # We recommend including this field under zones to ensure that the
+              # name of a zone isn't transformed to camelCase (i.e. "my-zone" -> "myZone").
+              # When using this, make sure to use camelCase for other variables like syncItemsFromAllZones.
               variableCasing: "original"
+
               main:
                 maps:
                   - "dungeon"
@@ -211,6 +233,11 @@ As with any new Redwood project, you should create a new [config environment](..
           - id: "match"
 
             zones:
+              # We recommend including this field under zones to ensure that the
+              # name of a zone isn't transformed to camelCase (i.e. "my-zone" -> "myZone").
+              # When using this, make sure to use camelCase for other variables like syncItemsFromAllZones.
+              variableCasing: "original"
+
               main:
                 maps:
                   - "match"
@@ -246,7 +273,7 @@ As with any new Redwood project, you should create a new [config environment](..
       secret: "your-second-generated-uuid-here"
 
     game-servers:
-      ready-timeout-seconds: 120
+      ready-timeout-seconds: 300
 
       local:
         unreal:

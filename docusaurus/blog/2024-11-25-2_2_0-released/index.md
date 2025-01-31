@@ -33,14 +33,14 @@ See the [GitHub release notes](https://github.com/RedwoodMMO/RedwoodPlugins/rele
 ## Backend changes
 
 - Fixed logging verbosity when you enable `logging.log-file.enabled`
-- Added support for [blob storage](https://redwoodmmo.com/docs/features/blob-storage)
-- Added an opt-out Kubernetes dependency SeaweedFS which provides S3 storage; read more [here](https://redwoodmmo.com/docs/providers/blobs/overview#seaweedfs)
+- Added support for [blob storage](/docs/features/blob-storage)
+- Added an opt-out Kubernetes dependency SeaweedFS which provides S3 storage; read more [here](/docs/providers/blobs/overview#seaweedfs)
 - Initial implementation of custom probes for Kubernetes health checks
 - Fixed issue with Instanced Dungeons not being able to return to the overworld
 
 ## Misc changes
 
-[World Data](https://redwoodmmo.com/docs/features/world-data) and [Persistent Items](https://redwoodmmo.com/docs/features/persistent-items) now have docs and are officially released!
+[World Data](/docs/features/world-data) and [Persistent Items (3.0 renamed these to Sync Items)](/docs/features/sync-items) now have docs and are officially released!
 
 We did an initial license check of the backend and verified that all dependencies have a license that allows commercial use without needing to disclose source. Many of the licenses do require license discloser/disclaimer, which we'll be adding in the next release. In the meantime, the licenses used by the dependencies include:
 
