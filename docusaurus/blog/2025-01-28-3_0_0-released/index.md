@@ -5,6 +5,8 @@ authors: [mike]
 tags: [release, news]
 ---
 
+![Version 3.0 adds zone/shard synchronization](/img/version-3-sync.gif)
+
 ## New Features
 
 - We now have a cross-server synchronization system with the use of [Sync Items](/docs/features/sync-items) (formally known as Persistent Items; you can still persist Sync Items)
@@ -14,6 +16,8 @@ tags: [release, news]
 - We made the process for customizing the Match Function more modular so you create a new class instead of modify the one provided in the source (which would cause merge conflicts)
 - We changed the [example of the World Data](/docs/features/world-data#unreal-setup) in the RPG Template
 - Standard Licenses [can now use the Dev Initiator on macOS and Linux](/docs/getting-started/running-with-backend#launching-the-backend)
+
+<!-- truncate -->
 
 ## Bug Fixes
 
