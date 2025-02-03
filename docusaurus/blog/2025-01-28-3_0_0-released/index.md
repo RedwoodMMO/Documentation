@@ -5,24 +5,6 @@ authors: [mike]
 tags: [release, news]
 ---
 
-## Analytics / EULA Changes
-
-By using version 3.0 and later, you now agree to [changes to the EULA](https://redwoodmmo.com/eula#16-analytics) for a minimal amount of data to be tracked. You can use prior versions of Redwood without these analytics. We'll always let you know that a version has an updated EULA.
-
-:::note
-These analytics are not a form of [DRM](https://en.wikipedia.org/wiki/Digital_rights_management); while we highly discourage you from preventing these analytics from being tracked, your backend won't break if they can't be tracked. We believe in playing fair in hope that you will too.
-:::
-
-Here is an excerpt of the EULA of what data is sent back to us starting in 3.0.0:
-
-- The name of your configuration environment
-- Whether it's a development or production environment
-- The URL to the Director Frontend service (this does not expose it to the public; just reports the actual URL)
-- The number of PlayerIdentity rows in the Director database
-- The number of Realm rows in the Director database
-- The version of Redwood you're using
-- The game server provider(s) you're using
-
 ## New Features
 
 - We now have a cross-server synchronization system with the use of [Sync Items](/docs/features/sync-items) (formally known as Persistent Items; you can still persist Sync Items)
@@ -55,3 +37,21 @@ As applicable, we provided Core Redirects so you can open Blueprint classes that
 - `FileSDK` plugin is no longer included in the RPG template
 - We removed the `Run Dev.bat` Windows launch script for the Dev Initiator, [favoring running from a terminal](/docs/getting-started/running-with-backend#launching-the-backend)
 - We renamed `dev-initiator.exe` to `dev-initiator-win.exe`
+
+## Analytics / EULA Changes
+
+By using version 3.0 and later, you now agree to [changes to the EULA](https://redwoodmmo.com/eula#16-analytics) for a minimal amount of data to be tracked. You can use prior versions of Redwood without these analytics. We'll always let you know that a version has an updated EULA.
+
+:::note
+These analytics are not a form of [DRM](https://en.wikipedia.org/wiki/Digital_rights_management); while we highly discourage you from preventing these analytics from being tracked, your backend won't break if they can't be tracked. We believe in playing fair in hope that you will too.
+:::
+
+Here is an excerpt of the EULA of what data is sent back to us starting in 3.0.0:
+
+- The name of your configuration environment
+- Whether it's a development or production environment
+- The URL to the Director Frontend service (this does not expose it to the public; just reports the actual URL)
+- The number of PlayerIdentity rows in the Director database
+- The number of Realm rows in the Director database
+- The version of Redwood you're using
+- The game server provider(s) you're using
