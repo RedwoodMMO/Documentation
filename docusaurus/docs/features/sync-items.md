@@ -15,6 +15,10 @@ Some examples of Sync Items are:
 - Limited-supply resource (to prevent cross-shard farming)
 - You could theoretically sync player characters and vehicles (so you can see them across zone boundaries), but note this isn't tested and you might need to do a bit of work to support this. Need extra support implementing this? Reach out for a [custom license](https://redwoodmmo.com/#pricing).
 
+:::warning
+Cross-server sync is disabled for the [Hathora](../providers/game-server-hosting/hathora.md) game server provider, but you can still use the [persistence feature](#persistent-items).
+:::
+
 ## Setup
 
 ### Backend
