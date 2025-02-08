@@ -11,4 +11,4 @@ If you want to get started with using the Redwood backend, you'll first need to 
 
 You can also play one of our live demos that showcase the gameplay templates by downloading a client using a link below:
 - [Match Template Demo Client](https://cdn.incanta.games/redwood/RedwoodMatchDemo.zip)
-- RPG Template Demo Client (Coming Soon)
+- [RPG Template Demo Client](https://cdn.incanta.games/redwood/RedwoodRpgDemo.zip)
