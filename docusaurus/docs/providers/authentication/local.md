@@ -7,6 +7,10 @@ sidebar_label: Username/Password (Local)
 
 The `local` provider is a standard username/password system. Players will call a register function with the Director Frontend, providing the username and password. The provider will create a unique salt for the user and generate a hash using [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2). Both the salt and the hash are stored in the database. By default, we use the [currently recommended number of iterations](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2) (`210000`) for PBKDF2-HMAC-SHA512.
 
+:::info
+When using the Dev Initiator in local development, the username/email field is case sensitive, however when using Kubernetes (locally or remotely) the username/email is case insensitive. The registered username will keep it's case in the database, but subsequent logins do not need to match the case in the database; also registers with a different case will not succeed.
+:::
+
 ## Configuration
 
 |Variable|Description|

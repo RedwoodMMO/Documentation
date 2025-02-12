@@ -237,7 +237,7 @@ Create a file named `redwood.json` in the project folder in your client packaged
 
 Testing the backend in a Kubernetes environment (locally or [remotely](./deploying-remotely.md)) are very similar. For match-based games (like the Shooter Template), you can get a game server running by doing matchmaking or lobby generation. For persistent games (like the RPG Template), you'll still need to use the same `yarn cli create-admin ...` and `yarn cli create-proxy ...` [commands that you used when running the backend via the Dev Initiator](../getting-started/running-with-backend.md#running-the-game) to startup a persistent server.
 
-## Deploying to the Cloud
+## Deploying Remotely
 
 :::success
 You now have a local Kubernetes cluster that hosts the same microservices that get deployed a production environment on the cloud. Most of your development and testing will be done locally, but it's important to test deploying to the cloud well before it's time to release your game.
