@@ -5,6 +5,8 @@ authors: [mike]
 tags: [release, news]
 ---
 
+![You can now play a live demo of Redwood's RPG template](/img/rpg-live-demo.gif)
+
 We released a live playable demo of our RPG Template, so you can play with it before downloading the project yourself!
 
 <div class="center">
