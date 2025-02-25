@@ -18,7 +18,7 @@ Each player can have 1 or more `PlayerCharacter` entries stored in any of the [R
 
 Each `PlayerCharacter` has a `name` associated with it to be displayed in game. Redwood will automatically call `APlayerState::SetPlayerName()` using this name.
 
-Each `PlayerCharacter` has the following JSON fields stored for it in the database. Note that Redwood doesn't fill the data for any of these (except `redwoodData`); it's up to you to define the structure of these objects. See how to do this [in Unreal](#unreal-usage).
+Each `PlayerCharacter` has the following JSON fields stored for it in the database. Note that Redwood doesn't fill the data for any of these (except `redwoodData`); it's up to you to define the structure of these objects. See how to do this [in Unreal](#unreal-setup).
 
 #### `characterCreatorData`
 
