@@ -201,7 +201,7 @@ As with any new Redwood project, you should create a new [config environment](..
 
             num-players-to-add-shard: 50
             # num-minutes-to-destroy-empty-shard: 5
-            collection-ends-when-any-instance-ends: false
+            collection-ends-when-any-shard-ends: false
 
             data:
 

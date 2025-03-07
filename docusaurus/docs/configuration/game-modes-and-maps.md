@@ -80,7 +80,7 @@ The Redwood Backend configures the Game Modes and Maps under the `game.profiles`
 - `num-minutes-to-destroy-empty-shard` Set this variable if you want empty shards to be destroyed after so many minutes of remaining empty. If you want to try to incentivize players to move from low-population shards to medium-population shards to be more efficient with server costs, you'll need to implement additional game and/or backend logic.
 - `min-players-for-matchmaking` is the minimum number of players that are allowed for matchmaking to consider a potential shallow match.
 - `matchmaking-zone-name` is an optional field that is required to enable matchmaking for this profile. Matchmaking requires a single-zone [`GameServerProxy`](../architecture/game-servers.md#gameserverproxy) so this field indicates which of the `zones` to use for matchmaking.
-- `collection-ends-when-any-instance-ends` is a boolean that when `true` Redwood will shutdown all [`GameServerInstances`](../architecture/game-servers.md#gameserverinstance) in the associated [`GameServerCollection`](../architecture/game-servers.md#gameservercollection) if any of the `GameServerInstances` end.
+- `collection-ends-when-any-shard-ends` is a boolean that when `true` Redwood will shutdown all [`GameServerInstances`](../architecture/game-servers.md#gameserverinstance) in the associated [`GameServerCollection`](../architecture/game-servers.md#gameservercollection) if any of the `GameServerInstances` end.
 - `data` is a key/value pair object where each pair will be passed to the map load URL as a parameter (e.g. &key=value). The value must be a string.
 
 Here are some examples of `<config-environment>/game.yaml` for the **Match** and **RPG** templates:
@@ -97,7 +97,7 @@ Here are some examples of `<config-environment>/game.yaml` for the **Match** and
             maps:
               - "expanse"
 
-        max-players-per-instance: 16
+        max-players-per-shard: 16
 
         matchmaking-zone-name: "main"
         min-players-for-matchmaking: 1
@@ -112,7 +112,7 @@ Here are some examples of `<config-environment>/game.yaml` for the **Match** and
             maps:
               - "convolution"
 
-        max-players-per-instance: 16
+        max-players-per-shard: 16
 
         matchmaking-zone-name: "main"
         min-players-for-matchmaking: 1
@@ -148,7 +148,7 @@ Here are some examples of `<config-environment>/game.yaml` for the **Match** and
 
         num-players-to-add-shard: 50
         # num-minutes-to-destroy-empty-shard: 5
-        collection-ends-when-any-instance-ends: false
+        collection-ends-when-any-shard-ends: false
 
         data:
 
