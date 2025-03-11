@@ -24,7 +24,7 @@ The Unreal plugin provides two static functions to facilitate this API call, `UR
 
 You can implement zone boundaries however you'd like. The Unreal plugin comes with an example spline boundary system that's used in the RPG Template. The `B_PortalComponent` blueprint in the Redwood plugin's Content folder is a simple box that will transfer players when they leave the other side.
 
-For example, given this pictogram:
+For example, take this pictogram:
 
 ```
        |B_PortalComponent|
