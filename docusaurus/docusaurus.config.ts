@@ -7,8 +7,8 @@ import { themes } from "prism-react-renderer";
 import { EnumChangefreq } from "sitemap";
 
 const config: Config = {
-  title: "Redwood MMO Framework Documentation",
-  tagline: "Dinosaurs are cool",
+  title: "Redwood Multiplayer Backend Documentation",
+  tagline: "Scale your multiplayer game!",
   favicon: "favicon.ico",
 
   // Set the production url of your site here

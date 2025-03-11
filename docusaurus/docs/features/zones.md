@@ -8,12 +8,33 @@ All [`GameServerProxies`](../architecture/game-servers.md#gameserverproxy) defin
 
 Zones are defined as part of the [game profile](../configuration/game-modes-and-maps.md#profiles).
 
-Transferring between zones can be initiated by the game server by calling the `realm:servers:transfer-zone:game-server-to-sidecar` API call, specifying the player character ID, zone name to transfer the player to, and where in the zone to spawn the player. The last component can either be a name of a spawn actor (Spawn Name) or either the spawn name within the zone or a modified transform which contains the location/rotation of the character and the control rotation of the camera.
+## Unreal Setup
 
-The Unreal plugin provides two static functions to facilitate this API call, `URedwoodServerGameSubsystem::TravelPlayerToZoneSpawnName` and `URedwoodServerGameSubsystem::TravelPlayerToZoneTransform` which you can call from C++ or BP as long as it's called from the game server. Clients that call this function just won't get a response due to not being able to connect to the [sidecar](../architecture/overview.md#sidecar).
-
-The Unreal plugin also provides two actors, `B_PortalComponent` and `B_PortalSpline` which call the `TravelPlayerToZoneTransform` function when a player's character passes through it. It's recommended to use these if you want to transfer zones when players reach a physical threshold/barrier. If you want to transfer players abstractly, you may want to call `TravelPlayerToZoneSpawnName` yourself; this is useful in fast travel systems for example.
+For every zone, you need to add `ARedwoodZoneSpawn` actors to the map to specify where players should spawn in at. In the Details panel in the Level Editor, you can override the `ZoneName` to match (case-sensitive) the name of the zone in your game profile (e.g. `mountain-pass` or `mine` from the RPG Template). Most zones should have have 1 `ARedwoodZoneSpawn` with the `default` `SpawnName`, but you can have more advanced logic here.
 
 :::info
-There are great examples of both the portals and a fast travel system in the **RPG Template**; we highly recommend checking those out!
+In the `mine` zone in the RPG Template, there are two zone spawns, one for when you enter via the Mountain Pass and one for when you return from the instanced dungeon.
+:::
+
+## Transferring Zones
+
+The Unreal plugin provides two static functions to facilitate this API call, `URedwoodServerGameSubsystem::TravelPlayerToZoneSpawnName` and `URedwoodServerGameSubsystem::TravelPlayerToZoneTransform` which you can call from C++ or BP as long **as it's called from the game server**. You can call these functions at any point (e.g. when a boss battle finishes, on overlap with a collision component, player reaches a certain level, etc.).
+
+### Zone Boundaries
+
+You can implement zone boundaries however you'd like. The Unreal plugin comes with an example spline boundary system that's used in the RPG Template. The `B_PortalComponent` blueprint in the Redwood plugin's Content folder is a simple box that will transfer players when they leave the other side.
+
+For example, given this pictogram:
+
+```
+       |B_PortalComponent|
+Zone A [ --1-- ] [ --2-- ] Zone B
+```
+
+A player traveling from Zone A to Zone B will not be transferred until the player _leaves_ the overlap box labeled `2`. Vice versa, a player traveling from Zone B to Zone A won't be transferred until they _leave_ overlap box labeled `1`. This means that players to transfer at the same point, but this is by design to prevent players from being constantly transferred between zones when they're on the boundary because they won't be immediately considered to transfer back until they travel back a bit.
+
+The plugin also has a `B_PortalSpline` actor which is a spline tool for placing many instance of `B_PortalComponent`.
+
+:::tip
+There are great examples of everything here (including portals, fast travel, and specific spawn locations) in the **RPG Template**; we **highly** recommend checking those out!
 :::
