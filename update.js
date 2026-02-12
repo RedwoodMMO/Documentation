@@ -43,11 +43,19 @@ for (const folder of blogFolders) {
 
 try {
   execSync(
-    `git add docusaurus && git commit -m "${process.env.COMMIT_MESSAGE || "Update mirror"}" && git push -u origin main`,
+    `git add docusaurus && git commit -m "${process.env.COMMIT_MESSAGE || "Update mirror"}"`,
     {
       encoding: "utf-8",
     }
   );
 } catch (e) {
   // do nothing if we error
+  process.exit(0);
 }
+
+execSync(
+  `git push -u origin main`,
+  {
+    encoding: "utf-8",
+  }
+);
