@@ -28,6 +28,8 @@ The `k8s` config variables determine how the realm is deployed to the cluster. T
 
 The `persistence.database` config variables define the PostgreSQL details for both `runtime-access` (how the NodeJS services access the database, this could be an internal Kubernetes service [see `RedwoodBackend/config/node/kubernetes/realm/instances/default.yaml` for an example] or a private network details for your managed database) and `deployment-access` (how the deployment scripts get access, usually a public endpoint).
 
+The `persistence.blobs` config variables define the [Blob Storage](../features/data/storage/blob-storage.md) details.
+
 ## Backend and Frontend
 
 The `backend` and `frontend` config variables define how many `replicas` to scale the services, what `debug-port` to use if you need to debug the services, and internal/external connection details.
@@ -40,8 +42,16 @@ During development, you'll see that both of the `external` host variables are se
 
 ## Game Servers
 
-The `game-servers` config variables define several behaviors related to the Unreal game server. Most of the relevant documentation can be found in the [game server provider documentation](../providers/game-server-hosting/overview.md).
+The `game-servers` config variables define several behaviors related to the Unreal game server. Most of the relevant documentation can be found in the [game server provider documentation](../features/game-servers/hosting/overview.md).
 
 ## Ticketing
 
-The `ticketing` config variables define several behaviors related to the Unreal game server. Most of the relevant documentation can be found in the [ticketing provider documentation](../providers/ticketing/overview.md).
+The `ticketing` config variables define several behaviors related to the Unreal game server. Most of the relevant documentation can be found in the [ticketing provider documentation](../features/ticketing/overview.md).
+
+## Default Proxy
+
+Read more about the [default proxy here](../features/realms.md#default-proxy).
+
+## Characters
+
+The `characters.archival-period-days` variable allows you to specify how many days a player character stays archived until it is deleted from the database. This defaults to `1` day. Setting it to `0` will skip archiving and immediately delete characters. Setting it to `-1` will never delete characters automatically and keep them archived indefinitely.

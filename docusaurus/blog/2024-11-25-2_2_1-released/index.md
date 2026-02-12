@@ -13,3 +13,5 @@ This release only has changes in the Backend; the UE plugins and game templates 
 This release fixes an issue with the `yarn dev` command and attempts to fix issues with admin accounts when only using Steam auth provider.
 
 See the [GitHub release notes](https://github.com/RedwoodMMO/RedwoodPlugins/releases/tag/2.2.1) or click **Read More** below for details.
+
+<!-- truncate -->

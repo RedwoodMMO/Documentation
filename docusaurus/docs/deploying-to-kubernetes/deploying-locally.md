@@ -138,7 +138,7 @@ Deploying locally for basic configurations is fairly straight forward:
     1. Deploy the Redwood images to the local Kubernetes cluster
 
     :::note
-    Docker images are not automatically created in `yarn deploy` if you're inheriting from the `staging` or `production` configuration environments. You will need to use the `yarn docker` command beforehand to create them. You can read more about this in [**Deploying to the Cloud**](./deploying-remotely.md#TODO).
+    Docker images are not automatically created in `yarn deploy` if you're inheriting from the `staging` or `production` configuration environments. You will need to use the `yarn docker` command beforehand to create them. You can read more about this in [**Deploying Remotely**](./deploying-remotely.md#building-and-pushing-docker-images).
     :::
 
 1. You may be prompted if you want to create the configured Pulumi stack. By default the stack is `dev`, but you can override this in the [above `pulumi.yaml` file](#pulumi-configuration) with `stack: "<stack-name>"`. If the name of the stack looks right, press the `Enter` key.
@@ -235,7 +235,7 @@ Create a file named `redwood.json` in the project folder in your client packaged
 
 ### Running a Test
 
-Testing the backend in a Kubernetes environment (locally or [remotely](./deploying-remotely.md)) are very similar. For match-based games (like the Shooter Template), you can get a game server running by doing matchmaking or lobby generation. For persistent games (like the RPG Template), you'll still need to use the same `yarn cli create-admin ...` and `yarn cli create-proxy ...` [commands that you used when running the backend via the Dev Initiator](../getting-started/running-with-backend.md#running-the-game) to startup a persistent server.
+Testing the backend in a Kubernetes environment (locally or [remotely](./deploying-remotely.md)) are very similar. For match-based games (like the Shooter Template), you can get a game server running by doing matchmaking or lobby generation. For persistent games (like the RPG Template), you'll still need to use the same `yarn cli create-proxy ...` [command that you used when running the backend via the Dev Initiator](../getting-started/running-with-backend.md#running-the-game) to startup a persistent server.
 
 ## Deploying Remotely
 

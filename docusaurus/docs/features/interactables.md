@@ -1,7 +1,3 @@
----
-sidebar_position: 6
----
-
 # Interactables
 
 The Unreal plugin comes with a few classes to provide best-practices when it comes to interactables. Interactables in a game can be many things:

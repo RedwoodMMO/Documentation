@@ -15,3 +15,5 @@ Quick patch release to fix a few minor issues!
 ## New Features
 
 - [Backend (Dev Initiator)] When running with the Dev Initiator, UE servers will now use a deterministic set of ports `7000-7099` (inclusive) which makes it easier to make firewall and port forwarding rules
+
+<!-- truncate -->

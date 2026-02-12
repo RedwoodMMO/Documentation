@@ -56,13 +56,18 @@ fsExtra.copySync(
   path.join(targetBuildPath, "docusaurus-sitemap.xml"),
 );
 
-fsExtra.copySync(
+const blogArchive = fsExtra.readJsonSync(
   path.join(
     __dirname,
     ".docusaurus",
     "docusaurus-plugin-content-blog",
     "default",
-    "blog-archive-80c.json",
+    "p",
+    "blog-archive-f05.json",
   ),
+);
+
+fs.writeFileSync(
   path.join(__dirname, "..", "src", "blog-archive.json"),
+  JSON.stringify(blogArchive.archive),
 );

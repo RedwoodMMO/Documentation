@@ -34,7 +34,7 @@ See the [GitHub release notes](https://github.com/RedwoodMMO/RedwoodPlugins/rele
 
 We discovered issues with versions 1.15+ of Rancher Desktop that broke networking/connectivity functionality of Agones game servers. This is the default game server provider when you deploy to Kubernetes, locally or in the cloud.
 
-Long story short, we're currently trying to prepare a forked release; in the meantime, we recommend waiting to release to Rancher Desktop. Other Kubernetes deployments remain unaffected. There _is_ an option for you to use version `1.14.2` of Rancher Desktop which has significant memory leak issues, but if you're so inclined to deal with those you can follow the [instructions on our docs](https://redwoodmmo.com/docs/deploying-to-kubernetes/prerequisites#rancher-desktop) to downgrade and set up 1.14.2 to use with Agones.
+Long story short, we're currently trying to prepare a forked release; in the meantime, we recommend waiting to release to Rancher Desktop. Other Kubernetes deployments remain unaffected. There _is_ an option for you to use version `1.14.2` of Rancher Desktop which has significant memory leak issues, but if you're so inclined to deal with those you can follow the [instructions on our docs](/docs/deploying-to-kubernetes/prerequisites#rancher-desktop) to downgrade and set up 1.14.2 to use with Agones.
 
 ### Other Kubernetes changes
 

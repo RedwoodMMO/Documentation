@@ -20,7 +20,7 @@ As a final step before Redwood's next major update, we're putting Redwood throug
 
 ## Steam Authentication
 
-Steam's the most popular PC distribution platform, so it might feel silly requiring a username/password if you're shipping your game directly to Steam. In the next release you'll be able to allow one or more authentication providers (username/password and Steam will be the only options for now, but we have more [planned](/docs/support/roadmap#authentication)). This streamlines the onboarding process for your players by creating an account by just launching the game through Steam.
+Steam's the most popular PC distribution platform, so it might feel silly requiring a username/password if you're shipping your game directly to Steam. In the next release you'll be able to allow one or more authentication providers (username/password and Steam will be the only options for now, but we have more [planned](/docs/support/roadmap)). This streamlines the onboarding process for your players by creating an account by just launching the game through Steam.
 
 ## Looking Ahead
 

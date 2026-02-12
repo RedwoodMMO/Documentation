@@ -53,9 +53,13 @@ We also moved the ticketing functionality to it's own microservice instead of it
 
 ## Idem Support
 
-[Idem](https://idem.gg) provides matchmaking as a service, which can be helpful for those that would rather have a 3rd party service handle the matchmaking instead of tuning [Open Match](/docs/providers/ticketing/open-match).
+[Idem](https://idem.gg) provides matchmaking as a service, which can be helpful for those that would rather have a 3rd party service handle the matchmaking instead of tuning [Open Match](/docs/features/ticketing/matchmaking/open-match).
 
-We've added support to quickly change the configuration to use the new [Idem Ticketing provider](/docs/providers/ticketing/idem)!
+We've added support to quickly change the configuration to use the new Idem Ticketing provider!
+
+:::warning
+Oct 29, 2025: We have removed Idem support in Redwood as they have discontinued their service.
+:::
 
 ## Improved Deployment Process
 

@@ -1,7 +1,3 @@
----
-sidebar_position: 8
----
-
 # Sync Items
 
 Sync Items are synchronized Actor Components (`URedwoodSyncComponent`) that can be attached to Actors to synchronize transform, state, and miscellaneous data. The synchronization is server-to-server via Redis; clients do not receive direct sync state from Redis but rather via UE replication of their connected server.
@@ -16,7 +12,7 @@ Some examples of Sync Items are:
 - You could theoretically sync player characters and vehicles (so you can see them across zone boundaries), but note this isn't tested and you might need to do a bit of work to support this. Need extra support implementing this? Reach out for a [custom license](https://redwoodmmo.com/#pricing).
 
 :::warning
-Cross-server sync is disabled for the [Hathora](../providers/game-server-hosting/hathora.md) game server provider, but you can still use the [persistence feature](#persistent-items).
+Cross-server sync is disabled for the [Hathora](./game-servers/hosting/hathora.md) game server provider, but you can still use the [persistence feature](#persistent-items).
 :::
 
 ## Setup
@@ -25,7 +21,7 @@ Cross-server sync is disabled for the [Hathora](../providers/game-server-hosting
 
 You need to configure your [Game Profile](../configuration/game-modes-and-maps.md#profiles) to specify how a zone should subscribe to sync items from other zones; synchronization is only automatically enabled for these situations:
 - Synchronizing between shards in the same zone
-- [World Data](./world-data.md), which is just a Persistent Sync Item with the special `proxy` ID
+- [World Data](./data/game/world-data.md), which is just a Persistent Sync Item with the special `proxy` ID
 
 ### Unreal
 
@@ -42,7 +38,7 @@ We recommend checking out the `B_Fence` Blueprint class in the **RPG Template** 
 1. In the data asset you created (i.e. `DA_CommunityChest`), set the `RedwoodTypeId` string to some unique identifier for this type of persistent item (i.e. `community-chest`). Set the `ActorClass` to the Actor you created (i.e. `B_CommunityChest`).
 
     :::note
-    The word `proxy` is a reserved `RedwoodTypeId` meant to be used to define the asset for [World Data](./world-data.md).
+    The word `proxy` is a reserved `RedwoodTypeId` meant to be used to define the asset for [World Data](./data/game/world-data.md).
     :::
 
 1. In your Actor (i.e. `B_CommunityChest`), attach an instance of the Actor Component `URedwoodSyncComponent`; it can have any name.
@@ -57,7 +53,7 @@ We recommend checking out the `B_Fence` Blueprint class in the **RPG Template** 
 
 1. **NOTE**: If you want the data to replicate, you must enable replication manually for your Actor and the `Data` variable.
 
-1. In your struct (i.e. `S_CommunityChestData`), you need to add a variable named `SchemaVersion` of type `Integer`.
+1. In your struct (i.e. `S_CommunityChestData`), you need to add a variable named `SchemaVersion` of type `Integer` that has a default value that is **non-negative** (default starts at `0`).
 
 1. Add any other serializable variables to your struct that you'd like synchronized.
 
@@ -70,7 +66,7 @@ All dirty sync information is batched together in a single API call to the [side
 Subscribed sidecars will individually receive messages from the sidecar for each item change ASAP, but note there will be _some_ latency. There currently is no clock synchronization/rewind behavior built into the system.
 
 :::note
-[Persisted Sync Items](#persistent-items) are persisted separately in a separate batch API call at the [`DatabasePersistenceInterval`](./player-data.md#saving) interval.
+[Persisted Sync Items](#persistent-items) are persisted separately in a separate batch API call at the [`DatabasePersistenceInterval`](./data/game/player-data.md#saving) interval.
 :::
 
 ## Traveling Between Zones
@@ -87,7 +83,7 @@ Some examples of Persistent Items are:
 - Player bases/UGC that is persisted in the open world area
 - A persistent ferry between areas on the map that players can upgrade
 - Community storage chests
-- Anything that persists in the world, but requires a more modular approach than using [world data](./world-data.md)
+- Anything that persists in the world, but requires a more modular approach than using [world data](./data/game/world-data.md)
 
 ### Enabling Persistence
 
@@ -105,4 +101,4 @@ All Sync Items can be placed in the Level Editor at design-time, but if you want
 
 ### Data Persistence
 
-Read all about data how data persistence (loading, saving, migrations when your structure changes) in [player data docs](./player-data.md#data-persistence). Everything there is common (including the same `DatabasePersistenceInterval` variable being used and how migration functions work). You will call the `MarkDataDirty()` function on the `URedwoodPersistenceComponent` Actor Component attached to your Actor class when you need to save to the database.
+Read all about data how data persistence (loading, saving, migrations when your structure changes) in [player data docs](./data/game/player-data.md#data-persistence). Everything there is common (including the same `DatabasePersistenceInterval` variable being used and how migration functions work). You will call the `MarkDataDirty()` function on the `URedwoodPersistenceComponent` Actor Component attached to your Actor class when you need to save to the database.

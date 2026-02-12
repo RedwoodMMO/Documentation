@@ -14,3 +14,5 @@ The backend didn't change except for the version number; we've updated the zip r
 This release fixes compiler errors caused by missing includes.
 
 See the [GitHub release notes](https://github.com/RedwoodMMO/RedwoodPlugins/releases/tag/2.0.1).
+
+<!-- truncate -->

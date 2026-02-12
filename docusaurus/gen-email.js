@@ -24,24 +24,25 @@ const unsubscribeFooter = `
 <div data-role="module-unsubscribe" class="module" role="module" data-type="unsubscribe" style="color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;" data-muid="4e838cf3-9892-4a6d-94d6-170e474d21e5">
 <div class="Unsubscribe--addressLine">
   <p class="Unsubscribe--senderName"
-    style="font-size:12px;line-height:20px"
+    style="font-size:12px;line-height:10px"
   >
-    {{Sender_Name}}
+    Incanta
   </p>
-  <p style="font-size:12px;line-height:20px">
-    <span class="Unsubscribe--senderAddress">{{Sender_Address}}</span>, <span class="Unsubscribe--senderCity">{{Sender_City}}</span>, <span class="Unsubscribe--senderState">{{Sender_State}}</span> <span class="Unsubscribe--senderZip">{{Sender_Zip}}</span>
+  <p style="font-size:12px;line-height:10px">
+    <span class="Unsubscribe--senderAddress">{{ address }}</span>
   </p>
 </div>
 <p style="font-size:12px; line-height:20px;">
-  <a class="Unsubscribe--unsubscribeLink" href="{{{unsubscribe}}}" target="_blank" style="font-family:sans-serif;text-decoration:none;">
+  <a class="Unsubscribe--unsubscribeLink" href="{{ unsubscribe_url }}" target="_blank" style="font-family:sans-serif;text-decoration:none;">
     Unsubscribe
   </a>
   -
-  <a href="{{{unsubscribe_preferences}}}" target="_blank" class="Unsubscribe--unsubscribePreferences" style="font-family:sans-serif;text-decoration:none;">
-    Unsubscribe Preferences
+  <a href="{{ subscriber_preferences_url }}" target="_blank" class="Unsubscribe--unsubscribePreferences" style="font-family:sans-serif;text-decoration:none;">
+    Subscriber Preferences
   </a>
 </p>
 </div>
+{{ message_content }}
 `;
 
 (async () => {

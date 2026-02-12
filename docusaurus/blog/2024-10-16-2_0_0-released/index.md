@@ -19,4 +19,4 @@ See the [GitHub release notes](https://github.com/RedwoodMMO/RedwoodPlugins/rele
 
 You can attach this component to any pawn that inherits directly or indirectly from `APawn`. By default, the data for the character is stored in the pawn actor class, but you can create a child class of `URedwoodCharacterComponent` and store the data in the component by disabling `URedwoodCharacterComponent::bStoreDataInActor`.
 
-The **RPG Template** has been updated with these changes and is a great example to reference how to set things up; the [associated docs](https://redwoodmmo.com/docs/features/player-data#unreal-setup) have also been updated.
+The **RPG Template** has been updated with these changes and is a great example to reference how to set things up; the [associated docs](/docs/features/data/game/player-data#unreal-setup) have also been updated.

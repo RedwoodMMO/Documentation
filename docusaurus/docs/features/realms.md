@@ -1,7 +1,3 @@
----
-sidebar_position: 11
----
-
 # Realms
 
 Realms the main collection of logic and data in Redwood. A Realm contains:
@@ -16,7 +12,7 @@ When players log into the Redwood Director (which is the very first thing they'l
 
 ## Regions
 
-Realms do not need to be bound to a single region. Traditionally speaking, for the standard MMORPG example, they would be in a single region, but many match-based games will have a single Realm for the entire game and have matches hosted by game server instances all over the globe. As of right now using the [Hathora](../providers/game-server-hosting/hathora.md) game server provider is the only supported mechanism to have multiple regions in a single Realm.
+Realms do not need to be bound to a single region. Traditionally speaking, for the standard MMORPG example, they would be in a single region, but many match-based games will have a single Realm for the entire game and have matches hosted by game server instances all over the globe. As of right now using the [Hathora](./game-servers/hosting/hathora.md) game server provider is the only supported mechanism to have multiple regions in a single Realm.
 
 ## Adding More Realms
 
@@ -43,6 +39,10 @@ You'll also need to add more entries to your [`hosts` file](../getting-started/i
 127.0.0.1 realm-europe.localhost
 127.0.0.1 realm-europe-backend.localhost
 ```
+
+:::warning
+You'll need to also add additional overrides for your custom realm configs for different operating environments. For example the `kubernetes` config env does provide some helper overrides for the `default.yaml` Realm, but you'll need to specify those changes in your respective Realm Instance Config (e.g. `config/node/your-game-kubernetes/realm/instances/europe.yaml`).
+:::
 
 ### Deploying The Realm
 
@@ -89,3 +89,19 @@ Then you'll need to make sure that the corresponding Realm Instance Config is co
 k8s:
   id: "k8s-europe"
 ```
+
+## Default Proxy
+
+Realms can be configured with a "Default Proxy" configuration, which is just all the inputs necessary to create a [`GameServerProxy`](../architecture/game-servers.md#gameserverproxy). You can see all of the options in `config/node/default/realm/instances/redwoodBase.yaml`.
+
+You can also configure Redwood to automatically create a version of the Default Proxy by overriding the `default-proxy.create-on-first-boot` config variables in your Realm Instance Config. This will create a new proxy after the boot sequence finishes if it can't find one with the associated configured proxy name. We don't use the `create-on-first-boot` feature usually, especially not in production, but we provided this option as some development workflows may be sped up by automatically creating a proxy instead of needing to call a [CLI command](./cli.md) each time.
+
+We do use the Default Proxy feature though via the `create-default-proxy` [CLI command](./cli.md). In prior releases you had to specify each of the options via the CLI, which was repetitive; now you can just call `create-default-proxy` with the proxy name and config env.
+
+## Proxies Configured with Start on Boot
+
+Admin users can configure a [`GameServerProxy`](../architecture/game-servers.md#gameserverproxy) to "start on boot". This flag tells Redwood two things:
+1. Start the proxy immediately (instead of waiting for a player to join or for the start proxy API command to be called)
+1. Every time the backend reboots to automatically start the proxy
+
+This can be useful for persistent proxies that should be running whenever Redwood is running (e.g. RPG overworld proxies).

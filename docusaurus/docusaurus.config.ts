@@ -35,6 +35,24 @@ const config: Config = {
 
   scripts: [{src: 'https://plausible.io/js/script.js', defer: true, 'data-domain': 'redwoodmmo.com'}],
 
+    plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            from: "/docs/features/transactional-email",
+            to: "/docs/features/transactional-email/overview",
+          },
+          {
+            from: "/docs/miscellaneous/integrating-redwood",
+            to: "/docs/getting-started/integrating-redwood",
+          },
+        ],
+      },
+    ],
+  ],
+
   presets: [
     [
       "classic",
@@ -70,6 +88,14 @@ const config: Config = {
 
   themeConfig:
     {
+      // announcementBar: {
+      //   id: "new_year_26",
+      //   content: "<strong>Royalty-Free Licenses and Source Code Access are <a href='/#pricing' target='_blank' rel='noopener noreferrer'>15% OFF until January 31st</a>!</strong>",
+      //   backgroundColor: "#81301e",
+      //   textColor: "#fff",
+      //   isCloseable: false,
+      // },
+
       // Replace with your project's social card
       image: "img/redwood/redwood-hero-card.jpg",
       navbar: {

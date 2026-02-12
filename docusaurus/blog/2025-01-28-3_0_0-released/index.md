@@ -12,9 +12,9 @@ tags: [release, news]
 - We now have a cross-server synchronization system with the use of [Sync Items](/docs/features/sync-items) (formally known as Persistent Items; you can still persist Sync Items)
 - We upgraded our database ORM Prisma to add support for `cuid2` IDs, and changed the defaults to use `cuid2` for ID generation which brings more secure IDs (though we weren't using them in an unsecure way before)
 - We've released a [public mirror of the documentation](https://github.com/redwoodMMO/documentation/) so if something catastrophic happens that would result in this website going down, you'll still have access to the full documentation
-- We've enabled Standard Licenses to package the [Match Function](/docs/architecture/overview#match-function) when using [Open Match](/docs/providers/ticketing/open-match)
+- We've enabled Standard Licenses to package the [Match Function](/docs/architecture/overview#match-function) when using [Open Match](/docs/features/ticketing/matchmaking/open-match)
 - We made the process for customizing the Match Function more modular so you create a new class instead of modify the one provided in the source (which would cause merge conflicts)
-- We changed the [example of the World Data](/docs/features/world-data#unreal-setup) in the RPG Template
+- We changed the [example of the World Data](/docs/features/data/game/world-data#unreal-setup) in the RPG Template
 - Standard Licenses [can now use the Dev Initiator on macOS and Linux](/docs/getting-started/running-with-backend#launching-the-backend)
 
 <!-- truncate -->

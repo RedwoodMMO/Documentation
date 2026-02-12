@@ -20,6 +20,10 @@ It's finally here! Our next major release has landed, and it comes with a ton of
 
 <!--truncate-->
 
+:::warning
+We have removed Idem support in Redwood as they have sunset their service.
+:::
+
 We're still generating missing documentation for the new features, so don't hesitate to reach out if you have any questions!
 
 **Note:** You will need to install the latest Redwood Installer version from the License Dashboard to download this new release.

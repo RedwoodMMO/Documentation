@@ -39,7 +39,7 @@ We've set our reference documentation live and decided to make it public so ever
 
 ## 50% off Discount
 
-We fully understand that Redwood isn't finished, and it doesn't yet do everything we have laid out on our [roadmap](https://redwoodmmo.com/docs/support/roadmap). Which is why we're offering Redwood at **half the price during Early Access**.
+We fully understand that Redwood isn't finished, and it doesn't yet do everything we have laid out on our [roadmap](/docs/support/roadmap). Which is why we're offering Redwood at **half the price during Early Access**.
 
 Purchasing Redwood comes with a year of software updates ($250/year/studio afterwards), and we plan to be out of Early Access before 2025 so you should be able to leverage the cheaper price to get the full framework. We wish we could make guarantees, but we're not going to purposely give empty promises that don't add value for anyone.
 

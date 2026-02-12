@@ -60,6 +60,19 @@ Another example is `deployment.redwood.director.backend.command` which defaults 
 
 Lastly, `deployment.redwood.director.backend.debug-port`, while not used in the code when `debug: false` is unchanged in the `production` environment and stays as the default `10100` value since it's not defined in `config/node/production/deployment/redwood.yaml.`
 
+### Custom Folder Location
+
+By default, you need to put your custom config env in the `config/node` directory. We don't actually do that ourselves as we prefer to have our configuration version controlled with the project rather than with the backend. To do this, create a `config-settings.json` file in the `RedwoodBackend` root directory specifying the `extraDirs` array with a folder you'd like to put your custom config environment in. For example:
+
+``` jsonc
+{
+  // ... any existing fields
+  "extraDirs": [
+    "C:\\path\\to\\YourProject\\Config\\Backend"
+  ]
+}
+```
+
 ## Config Environment Inheritance
 
 By default, a config environment in `config/node` (other than `default`) inherits the values defined in `default`. However, you can inherit from more environments for more complex configuration setups.

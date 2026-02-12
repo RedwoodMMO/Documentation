@@ -52,17 +52,13 @@ You can place the `RedwoodBackend` folder anywhere; we recommend either the root
 
 ### Backend Dependencies
 
-<details>
-    <summary>**If you're using the Backend source code, have a persistent world game, or using the RPG template, you'll need to install NodeJS and dependencies**</summary>
+Follow the instructions [**here**](./prerequisites.md#nodejs) to install NodeJS and Yarn. You don't need the other dependencies listed on that page yet.
 
-    Follow the instructions [**here**](../deploying-to-kubernetes/prerequisites.md#nodejs) to install NodeJS and Yarn. You don't need the other dependencies listed on that page yet.
+In the `RedwoodBackend` directory, run the below command to install the dependencies:
 
-    In the `RedwoodBackend` directory, run the below command to install the dependencies:
-
-    ```bash
-    yarn
-    ```
-</details>
+```bash
+yarn
+```
 
 ### Configure Hosts File
 
@@ -75,6 +71,8 @@ This will require local admin privileges; you may need to request your IT sysadm
 127.0.0.1 director-backend.localhost
 127.0.0.1 realm-default.localhost
 127.0.0.1 realm-default-backend.localhost
+127.0.0.1 chat.localhost
+127.0.0.1 muc.chat.localhost
 ```
 
 ### Initial Configuration
@@ -255,12 +253,12 @@ As with any new Redwood project, you should create a new [config environment](..
 1. Generate two UUIDs for realm authentication for the next step. You can do this with an [online generator](https://www.uuidgenerator.net/version4).
 
     :::note
-    If you've [installed NodeJS & Yarn](../deploying-to-kubernetes/prerequisites#nodejs) and Redwood dependencies by running `yarn` in the `RedwoodBackend` directory, you can run `yarn id` in the `RedwoodBackend` directory to generate a UUID.
+    If you've [installed NodeJS & Yarn](./prerequisites.md#nodejs) and Redwood dependencies by running `yarn` in the `RedwoodBackend` directory, you can run `yarn id` in the `RedwoodBackend` directory to generate a UUID.
     :::
 
 1. Set the contents of your `realm/instances/default.yaml` to the below; you can use this for any template project. In this config, we're:
 
-    - Specifying new realm auth parameters. The secret shouldn't be shared externally to the studio, and doesn't support the [secrets system](../providers/secrets/overview.md) yet, so you're safe to commit this value in the meantime but otherwise treat it like a secret.
+    - Specifying new realm auth parameters. The secret shouldn't be shared externally to the studio, and doesn't support the [secrets system](../features/secrets/overview.md) yet, so you're safe to commit this value in the meantime but otherwise treat it like a secret.
     - Specifying the path to the Unreal Engine binaries folder and executable (change based on your version/OS. **Note:** our templates currently only work on 5.4+)
     - Specifying the path to the UE project file
     - Some updated matchmaking parameters:
@@ -290,4 +288,20 @@ As with any new Redwood project, you should create a new [config environment](..
 
     :::note
     Notice that for Windows paths, you need to use double backslashes (`\\`) instead of single backslashes (`\`).
+    :::
+
+    :::warning
+    If you're on **macOS**, the `game-servers.local.unreal` config must not point to the `UnrealEditor.app` executable, but actually it's hidden included `UnrealEditor` binary:
+
+    ``` yaml
+    game-servers:
+      # ...
+
+      local:
+        unreal:
+          path: "/path/to/UE/Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS"
+          executable: "UnrealEditor"
+
+      # ...
+    ```
     :::

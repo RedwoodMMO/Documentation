@@ -20,7 +20,7 @@ GameServerProxies don't always need to have active game servers running to be li
 
 ## GameServerInstance
 
-`GameServerInstance` is a direct representation of a running game server instance/executable. It serves a single shard for a single zone (collectively identified in the instance's `channel` database field). It has the associated connection URI stored in the `connection` field (after it has become available post startup). It also has a `providerId` field which stores the ID for the associated backing game server provider (e.g. [Agones](../providers/game-server-hosting/agones.md) or [Hathora](../providers/game-server-hosting/hathora.md)). For example, if you're using Hathora, the `providerId` is the associated [Room](https://hathora.dev/docs/concepts/hathora-entities#room) ID.
+`GameServerInstance` is a direct representation of a running game server instance/executable. It serves a single shard for a single zone (collectively identified in the instance's `channel` database field). It has the associated connection URI stored in the `connection` field (after it has become available post startup). It also has a `providerId` field which stores the ID for the associated backing game server provider (e.g. [Agones](../features/game-servers/hosting/agones.md) or [Hathora](../features/game-servers/hosting/hathora.md)). For example, if you're using Hathora, the `providerId` is the associated [Room](https://hathora.dev/docs/concepts/hathora-entities#room) ID.
 
 ## GameServerContainer
 

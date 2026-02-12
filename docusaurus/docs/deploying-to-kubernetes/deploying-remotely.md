@@ -8,56 +8,56 @@ import TabItem from '@theme/TabItem';
 # Deploying Remotely
 
 :::warning
-You need to follow the steps to **[deploy locally](../deploying-to-kubernetes/deploying-locally.md)** before attempting to deploy to a cloud provider as that section covers some common configuration changes that this section extends on.
+You need to follow the steps to **[deploy locally](../deploying-to-kubernetes/deploying-locally.md)** before attempting to deploy to a remote Kubernetes cluster as that section covers some common configuration changes that this section extends on.
 :::
 
 The main differences for deploying to a remote cluster instead of locally are:
 
-- Adding a credential for Pulumi to authenticate with that provider
+- Adding a kubeconfig for Pulumi to authenticate with the remote Kuberenetes cluster
 - Adding the necessary Redwood configuration to create and publish the necessary Docker images
 - Need to consider that the Docker images need to be uploaded to an externally-hosted Container Registry
 
 ## Redwood Configuration
 
-1. Create a new configuration environment that inherits from one of the provided presets based on which cloud provider you are deploying to **and** the configuration environment you created [when you deployed locally](../deploying-to-kubernetes/deploying-locally.md#redwood-configuration):
+1. Create a new configuration environment that inherits from the `staging` or `production` environment presets **and** the configuration environment you created [when you deployed locally](../deploying-to-kubernetes/deploying-locally.md#redwood-configuration):
 
-    <Tabs>
-      <TabItem value="digitalocean" label="DigitalOcean" default>
-        `config/node/<production-config-environment>/_config.json`:
-        ```json
-        {
-          "parentNames": ["production", "cloud-do", "<project-kubernetes-config-environment>"]
-        }
-        ```
+    `config/node/<production-config-environment>/_config.json`:
+    ```json
+    {
+      "parentNames": ["production", "<project-kubernetes-config-environment>"]
+    }
+    ```
 
-        **For example:**
-        `config/node/redwood-demo-production/_config.json`:
-        ```json
-        {
-          "parentNames": ["production", "cloud-do", "redwood-demo-kubernetes"]
-        }
-        ```
-      </TabItem>
-      <TabItem value="aws" label="AWS">
-        We're still working on adding an AWS integration.
-      </TabItem>
-      <TabItem value="azure" label="Azure">
-        We're still working on adding an Azure integration.
-      </TabItem>
-      <TabItem value="google" label="Google Cloud">
-        We're still working on adding an Google Cloud integration.
-      </TabItem>
-    </Tabs>
+    **For example:**
+    `config/node/redwood-demo-production/_config.json`:
+    ```json
+    {
+      "parentNames": ["production", "redwood-demo-kubernetes"]
+    }
+    ```
+
+1. Add a `deployment/_index.yaml` fil in your config env that has the below contents:
+
+    ``` yaml
+    cloud: "custom"
+    ```
 
 1. Add a `docker.yaml` file in your config env and use the below as a template, but you should change every variable based on your setup:
 
     ```yaml
-    main-container-registry: "registry.digitalocean.com/incanta-generic-cr"
-    image-prefix: "${docker.main-container-registry}/redwood-demos"
-    registry-auth:
-      username: "<username>"
-      password: "<password>"
+    registry:
+      url: "yourcr.com/container-registry" # Do not include a trailing slash
+      secret-name: "redwood-container-registry-secret"
+      auth:
+        username: "yourcr-username"
+        password: "yourcr-password" # This can be a secret in the secrets provider
+
+    image-prefix: "${docker.registry.url}/redwood"
     ```
+
+    :::note
+    You need to use an external Container Registry for your images. You can use [Docker Hub](https://hub.docker.com/), [GitHub Packages](https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry), or deploy your own; many cloud providers provide an easy to deploy option.
+    :::
 
 1. Add a `director.yaml` file to your config env. The below is a template you can use, but you should change every variable:
 
@@ -163,7 +163,7 @@ The main differences for deploying to a remote cluster instead of locally are:
     # from thinking this should follow the Pulumi.yaml schema that
     # Pulumi CLI uses.
 
-    # It's recommended to use an instance of Pulumi Cloud, which the below does
+    # It's recommended to use an instance of Pulumi Cloud for production environments, which the below does
     local-mode: false
     access-token: "<pulumi-token>" # Get one by following https://www.pulumi.com/docs/pulumi-cloud/access-management/access-tokens/
     org: "<your-pulumi-org>"
@@ -186,43 +186,66 @@ The main differences for deploying to a remote cluster instead of locally are:
     If you don't use this Cloudflare integration, you will need to configure your DNS manually to point to the external connection hostnames you configured above.
     :::
 
-1. Provide proper authentication for your cloud provider:
+1. Add the `kubeconfig` to corresponding `config/node/yourenv/deployment/kubernetes/instances/<instance>.yaml`:
 
-    <Tabs>
-      <TabItem value="digitalocean" label="DigitalOcean" default>
-        1. Create a [Personal Access Token](https://cloud.digitalocean.com/account/api/tokens) with both `Read` and `Write` permissions
-        1. In your config env, create the file `deployment/_index.yaml` with the below template:
-            ```yaml
-            digitalocean:
-              token: "<do-token>"
-            ```
-      </TabItem>
-      <TabItem value="aws" label="AWS">
-        We're still working on adding an AWS integration.
-      </TabItem>
-      <TabItem value="azure" label="Azure">
-        We're still working on adding an Azure integration.
-      </TabItem>
-      <TabItem value="google" label="Google Cloud">
-        We're still working on adding an Google Cloud integration.
-      </TabItem>
-    </Tabs>
+    ``` yaml
+    kubeconfig: "<the contents of a kubeconfig file>"
+    ```
 
-1. Reference `config/node/default/deployment/kubernetes/_index.yaml` to see if there are any variables you'd like to change by overriding in your own `deployment/kubernetes/_index.yaml` file.
+    <details>
+      <summary>This is retrieved after you provision your own Kubernetes cluster in a later step. Below are some hints to point you in the right direction, but contact your cloud provider/cluster software support if you need more help.</summary>
 
-    - Almost certainly, you'll need to update `k8s-version`. You can see available slugs in the Create Cluster menu in DigitalOcean's app or with [this third-party tool](https://slugs.do-api.dev/). These slugs update _frequently_; we usually pick the most recent one when we're deploying a new cluster and then don't change this variable until necessary.
-    - We've disabled `auto-upgrade` and `high-availability`, but you may want to consider changing that
-    - The `name-prefix` is how the resource is named in DigitalOcean's panel; this is a prefix for the individual cluster names you have defined in `deployment.kubernetes.instances`
-    - You shouldn't need to change the firewall options
-    - Consider changing the `vm-type`, `min-nodes`, and `max-nodes` to your need; that [third-party tool](https://slugs.do-api.dev/) is really helpful to see the options concisely
+      #### Talos
 
-1. Config envs that inherit from `production` by default are configured to use an external PostgreSQL database. Redwood will not provision the managed database, nor create the credentials or initial database. Redwood will migrate/initialize the schemas/tables. We highly recommend using a managed database configured with backups/snapshots. If you're using DigitalOcean with a DigitalOcean database, you can override the `dependencies.postgresql.externalDbId` variable in your cluster config (by default this would be at `deployment/kubernetes/instances/k8s-default.yaml`). You can retrieve this ID by just navigating to the database in the admin panel and getting the UUID in the URL. Providing this will write firewall rules for you so that the cluster can access the database.
+      See [the official docs](https://docs.siderolabs.com/talos/v1.11/getting-started/getting-started#step-10%3A-get-kubernetes-access) (please note the link may be pointing to an outdated page).
+
+      #### K0s
+
+      See [the official docs](https://docs.k0sproject.io/stable/k0sctl-install/#4-access-the-cluster).
+
+      #### K3s
+
+      After you install K3s, you can find the `kubeconfig` contents stored at `/etc/rancher/k3s/k3s.yaml`; see [K3s Cluster Access docs](https://docs.k3s.io/cluster-access).
+
+      #### DigitalOcean
+
+      1. Open the Kubernetes cluster page in the dashboard
+      1. In the top right, click on **Actions**
+      1. Click **Download Config**
+      1. The contents of the download file are the `kubeconfig`
+
+      #### AWS
+
+      See [the official docs](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html).
+
+      #### Azure
+
+      1. SSH into the master node, see [these docs](https://learn.microsoft.com/en-us/azure/aks/node-access)
+      1. Run `cat ~/.kube/config` (may also be stored at `/etc/kubernetes/admin.conf`) to get the `kubeconfig` contents
+
+      #### Google Cloud
+
+      1. Add an entry to your local `~/.kube/config` file using the [glcoud CLI](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#store_info)
+      1. List the contexts: `kubectl config get-contexts`
+      1. Switch to your gcloud context: `kubectl config set-context <context-id>`
+      1. Export the `kubeconfig`: `kubectl config view --minify --flatten > kubeconfig.yaml`
+
+      #### Linode
+
+      Run `linode-cli lke kubeconfig-view $clusterID --text | sed 1d | base64 --decode > kubeconfig.yaml`.
+    </details>
 
     :::note
-    If you want to keep using the helm chart that installs PostgreSQL in your cluster like in local deployment, you should note it has not been optimized for production and, if you haven't noticed yet when deploying locally, it is configured to delete it's data when destroyed as there's no persistent volume configured. You can find all the available configuration values in `config/node/default/deployment/dependencies/postgresql.yaml` (the [ArtifactHUB page](https://artifacthub.io/packages/helm/bitnami/postgresql) is also a helpful resource for figuring out what you can supply in the `values` object). You will **definitely** be "on your own" to figure this one out unless you purchased dedicated support from us.
+    If you're still only using one Kubernetes cluster (default for most studios), you likely want to modify the default instance at `config/node/yourenv/deployment/kubernetes/instances/k8s-default.yaml`.
     :::
 
-1. You'll may want to change the `region` details for the cluster too; see `config/node/default/deployment/kubernetes/instances/k8s-default.yaml` for more. The `name` and `ping` variables are what's used in the `GetRegions` call in `URedwoodClientGameSubsystem`. At the current time, this may not be super helpful (since Hathora regions are used when using Hathora and ping can be retrieved other ways in Unreal), but it's worth specifying for now. Here's an example we use in one of our prod envs:
+    :::warning
+    We highly recommend that you use a [Secrets provider](../features/secrets/overview.md) to store the `kubeconfig` contents.
+    :::
+
+1. Reference `config/node/default/deployment/kubernetes/redwoodBase.yaml` to see if there are any variables you'd like to change by overriding in your own `deployment/kubernetes/<instance>.yaml` file.
+
+You'll likely want to modify the `region` config variables. The `name` and `ping` variables are what's used in the `GetRegions` call in `URedwoodClientGameSubsystem`. Here's an example we use in one of our prod envs:
 
     ```yaml
     region:
@@ -231,18 +254,49 @@ The main differences for deploying to a remote cluster instead of locally are:
       ping: "${director.frontend.connection.external.host}" # this might not be correct if you're using CloudFlare proxying (which Redwood uses by default when using the Cloudflare DNS provider)
     ```
 
+1. Config envs that inherit from `production` by default are configured to use an external PostgreSQL database. Redwood will not provision the managed database, nor create the credentials or initial database. Redwood will migrate/initialize the schemas/tables. We highly recommend using a managed database configured with backups/snapshots. If you're using DigitalOcean with a DigitalOcean database, you can override the `dependencies.postgresql.externalDbId` variable in your cluster config (by default this would be at `deployment/kubernetes/instances/k8s-default.yaml`). You can retrieve this ID by just navigating to the database in the admin panel and getting the UUID in the URL. Providing this will write firewall rules for you so that the cluster can access the database.
+
+    :::note
+    If you want to keep using the helm chart that installs PostgreSQL in your cluster like in local deployment, you should note it has not been optimized for production and, if you haven't noticed yet when deploying locally, it is configured to delete it's data when destroyed as there's no persistent volume configured. You can find all the available configuration values in `config/node/default/deployment/dependencies/postgresql.yaml` (the [ArtifactHUB page](https://artifacthub.io/packages/helm/bitnami/postgresql) is also a helpful resource for figuring out what you can supply in the `values` object). You will **definitely** be "on your own" to figure this one out unless you purchased dedicated support from us.
+    :::
+
+## Creating a Kubernetes Cluster
+
+Redwood used to provision a Kubernetes cluster for you in older versions, but this was restrictive as it required us to implement an integration for every cloud provider. Starting in version 4.0, Redwood no longer provisions a Kubernetes cluster or the associated node pools for you. This gives you ultimate flexibility of where you want to deploy your cluster.
+
+### Cluster Hardware
+
+You are encouraged to determine your own cluster needs, which will primarily depend on your game server and expected CCUs (concurrent users). Game servers usually have dedicated CPUs and not shared CPUs as it can cause hitching, but you're welcome to try using shared CPUs.
+
+Our demo environments are on DigitalOcean using standard Dedicated CPU. Each node has **4 vCPU and 8 GB RAM nodes**. Our RPG & Match environments use **2 nodes total** with very little traffic (for example, we never need to shard).
+
+### Unmanaged Options
+
+These options are solutions that you manually configure the cluster. This enables you to host at home or to leverage more affordable bare metal hosting options.
+
+- [Talos](https://www.talos.dev/)
+- [K0s](https://k0sproject.io/)
+- [K3s](https://k3s.io/)
+    - You need to disable the default Traefik ingress controller; you can do this during install `curl -sfL https://get.k3s.io | sh -s - --disable=traefik` or modify `/etc/systemd/system/k3s.service` to add the `--disable=traefik` argument to the `server` command if you already have it installed.
+
+### Managed Options
+
+These are just some more popular managed cloud options; you don't have to manually provision the nodes in the cluster and the control plane is already set up for you. These are more straight forward to use, but you are limited to hosting on their cloud platform.
+
+- [DigitalOcean](https://www.digitalocean.com/products/kubernetes)
+- [AWS](https://aws.amazon.com/eks/)
+- [Google Cloud](https://cloud.google.com/kubernetes-engine)
+- [Azure](https://azure.microsoft.com/en-us/products/kubernetes-service)
+- [Linode](https://www.linode.com/products/kubernetes/)
+
 ## Creating a Container Registry
 
-Redwood does not create a Container Registry for you. There are several options, but we recommend creating one with the cloud provider you'll be hosting the backend on. Further, we highly recommend that the registry is hosted in the same region as your main backend cluster to reduce bandwidth costs and transfer speeds.
+Redwood does not create a Container Registry for you. There are several options, but we recommend creating one with the cloud provider that hosts your [cluster](#creating-a-kubernetes-cluster). Further, we highly recommend that the registry is hosted in the same region as your main backend cluster to reduce bandwidth costs and transfer speeds.
 
 - [DigitalOcean](https://www.digitalocean.com/products/container-registry)
 - [AWS](https://aws.amazon.com/ecr/)
 - [Google Cloud](https://cloud.google.com/artifact-registry)
 - [Azure](https://azure.microsoft.com/products/container-registry)
-
-:::note
-Do note that DigitalOcean is the only officially supported cloud provider.
-:::
 
 Make sure you update `docker.yaml` in your config env that you created above with the proper container registry details.
 
@@ -254,8 +308,6 @@ We've provided a separate `yarn docker <config-env>` script just for building Do
 
 ```bash
 $ yarn docker --help
-yarn run v1.22.19
-$ ts-node packages/deployment/src/docker/script.ts --help
 Usage: yarn docker [options] <config-environment>
 
 Script for building, tagging, and pushing Redwood Docker images
@@ -321,8 +373,6 @@ There's a lot of options here for flexibility, but we generally only use the `-t
 
     ```bash
     $ yarn docker redwood-demos-prod -l
-    yarn run v1.22.19
-    $ ts-node packages/deployment/src/docker/script.ts redwood-demos-prod -l
     Pulling latest base images...
     Initiating building & pushing 3 images to registry: registry.digitalocean.com at path: incanta-generic-cr
 

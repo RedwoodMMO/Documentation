@@ -6,7 +6,7 @@ tags: [tech]
 ---
 
 :::tip
-I wrote this post as a [guest article for Hathora](https://hathora.dev/blog/persistence-for-ephemeral-game-servers), and I've released it here too as a mirror. Hathora is Redwood's official [on-demand game server provider](/docs/providers/game-server-hosting/hathora), which can greatly simplify your infrastructure and DevOps.
+I wrote this post as a [guest article for Hathora](https://hathora.dev/blog/persistence-for-ephemeral-game-servers), and I've released it here too as a mirror. Hathora is Redwood's official [on-demand game server provider](/docs/features/game-servers/hosting/hathora), which can greatly simplify your infrastructure and DevOps.
 :::
 
 Without persistent data, online games would only have usernames and _maybe_ avatars. Worlds wouldn't be able to reload after a game or OS update. Whether you're using Hathora for ephemeral matches or persistent worlds, you usually need persistent data to _at least_ keep track of player progression and the player's appearance (but likely much more).
@@ -298,7 +298,7 @@ Redwood takes into consider all of these authentication handshakes and game data
 - Cloud deployment scripts
 - and more to come
 
-Redwood also provides a [turnkey integration with Hathora](https://redwoodmultiplayer.com/docs/providers/game-server-hosting/hathora) while also supporting running uncooked game servers locally all using the same Redwood API calls from the game server, most of which are handled for you with the Redwood Unreal plugins (of course you can opt-out and call the APIs yourself).
+Redwood also provides a [turnkey integration with Hathora](/docs/features/game-servers/hosting/hathora) while also supporting running uncooked game servers locally all using the same Redwood API calls from the game server, most of which are handled for you with the Redwood Unreal plugins (of course you can opt-out and call the APIs yourself).
 
 Redwood was designed to provide a great developer experience so you don't have to implement all of these details from scratch and can just focus on building your game and, if you choose to, customizing the backend to add support for next gen online experiences.
 

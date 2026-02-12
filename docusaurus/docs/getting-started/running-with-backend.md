@@ -9,10 +9,6 @@ import TabItem from '@theme/TabItem';
 
 ## Launching the Backend
 
-:::warning
-Currently the **Standard License** option only works for Windows development machines. We're working on getting MacOS and Linux supported.
-:::
-
 <Tabs>
   <TabItem value="standard" label="Standard License" default>
     Open a terminal and navigate to the `RedwoodBackend` directory. Run the below command after replacing `<your-config-env>` with the name of the config folder you created earlier:
@@ -87,7 +83,7 @@ Several logs will print to the console as the backend initializes; wait until yo
     1. Select `PLAY`; from here, you can either select `MATCHMAKING` or `START LOBBY` to create a match. The `JOIN LOBBY` button will show a list of existing public lobbies.
 
         :::note
-        It may take awhile for the server to load the first time. You may get a timeout and need to try again. If your ticket keeps going stale, you can increase the `ticket-stale-time-ms` variable you [set earlier](#initial-configuration) and restart the Dev Initiator.
+        It may take awhile for the server to load the first time. You may get a timeout and need to try again. If your ticket keeps going stale, you can increase the `ticket-stale-time-ms` variable you [set earlier](./installing.md#initial-configuration) and restart the Dev Initiator.
         :::
 
         <video alt="Match Template example cycle" controls width="100%" height="auto">
@@ -96,13 +92,13 @@ Several logs will print to the console as the backend initializes; wait until yo
         </video>
 
         :::info
-        Server initialization is shorter in a packaged/cooked game. When running with the `local` [game server provider](../providers/game-server-hosting/overview.md), you're using uncooked content through `UnrealEditor.exe`. Using the `agones` game server provider will have the shortest initialization time due always having a warm server already started waiting to get the match details. Hathora's startup time is also quite fast, with their Enterprise tier having the best performance.
+        Server initialization is shorter in a packaged/cooked game. When running with the `local` [game server provider](../features/game-servers/hosting/overview.md), you're using uncooked content through `UnrealEditor.exe`. Using the `agones` game server provider will have the shortest initialization time due always having a warm server already started waiting to get the match details. Hathora's startup time is also quite fast, with their Enterprise tier having the best performance.
         :::
   </TabItem>
   <TabItem value="rpg" label="RPG Template">
     It's time to start the game, connect to the backend, start the overworld servers, and join!
 
-    1. [Install NodeJS/Yarn](../deploying-to-kubernetes/prerequisites.md#nodejs) if you haven't yet
+    1. [Install NodeJS/Yarn](./prerequisites.md#nodejs) if you haven't yet
 
         :::info
         We need this extra dependency for persistent-server games since the server isn't started when matchmaking finds a match. Persistent games are assumed to already be started, so we need to use a provided tool to create and start that server before we try to join.
@@ -116,7 +112,7 @@ Several logs will print to the console as the backend initializes; wait until yo
 
         ![RPG Template open Frontend Level](/img/rpg-open-title-level.jpg)
 
-    1. Make sure you've selected `Play Standalone` under the PIE **Net Mode** (it's the default) and are still in the `L_RW_LyraFrontEnd` level:
+    1. Make sure you've selected `Play Standalone` under the PIE **Net Mode** (it's the default) and are still in the `L_Title` level:
 
         ![RPG Template select standalone](/img/rpg-play-standalone.jpg)
 
@@ -154,20 +150,11 @@ Several logs will print to the console as the backend initializes; wait until yo
     1. Before you can join the server, we need to create it:
 
         1. Open a terminal to the `RedwoodBackend` directory
-        1. Create an admin user (changing the env arg to your config environment name):
-
-            ```bash
-            yarn cli create-admin admin --env project-name
-            ```
-
-            :::note
-            You'll be prompted for a password for this new user, but you can optionally set the `RW_PASSWORD` environment variable to skip manually entering it each time.
-            :::
 
         1. Start a [GameServerProxy](../architecture/game-servers.md#gameserverproxy) using the [preconfigured](./installing.md#initial-configuration) `overworld` [game profile](../configuration/game-modes-and-maps.md#profiles) (changing the env arg to your config environment name):
 
             ```bash
-            yarn cli create-proxy overworld overworld --user admin --env project-name --start-on-boot --proxy-ends --public
+            yarn cli create-proxy overworld overworld --env project-name --start-on-boot --proxy-ends --public
             ```
 
             :::note
@@ -188,7 +175,7 @@ Several logs will print to the console as the backend initializes; wait until yo
     1. The backend is using uncooked data from the Unreal assets for the servers running, so you can't modify any of the Unreal assets while the servers are still running. You can stop the GameServerProxy's backing GameServerCollection (aka each of the shard servers for the world) by running the below command in the `RedwoodBackend` terminal you had open before:
 
         ```bash
-        yarn cli stop-proxy --user admin --env project-name <the-proxy-id-returned-from-the-start-proxy-command>
+        yarn cli stop-proxy --env project-name <the-proxy-id-returned-from-the-start-proxy-command>
         ```
 
         For example, if your `start-proxy` command returned:
@@ -200,7 +187,7 @@ Several logs will print to the console as the backend initializes; wait until yo
         then you would run:
 
         ```bash
-        yarn cli stop-proxy --user admin --env project-name cm1ol7o270001xhxi5z3d7fw2
+        yarn cli stop-proxy --env project-name cm1ol7o270001xhxi5z3d7fw2
         ```
 
   </TabItem>
@@ -218,21 +205,7 @@ Several logs will print to the console as the backend initializes; wait until yo
         ![Title screen connecting to the backend](/img/testing-match-failing-to-connect.jpg)
 
         :::note
-        If you're still having trouble connecting, make sure you don't have other applications using conflicting ports. The Redwood backend by default runs on ports `3000` and `3001`. These config variables can be changed by adding them to the `_index.yaml` file you created [earlier](#configuring-the-backend). Below is what you can add to the end of the file; change the ports respectively:
-
-        ``` yaml
-        director:
-          connection:
-            backend:
-              port: 3000
-            frontend:
-              port: 3001
-
-        realm:
-          connection:
-            backend:
-              game-server-access:
-                port: 3000
+        If you're still having trouble connecting, make sure you don't have other applications using conflicting ports. The Redwood backend by default runs on ports `3000` and `3001`. These config variables can be changed by adding them overriding your director and realm instance configs. See `config/node/default/director.yaml` and `config/node/default/realm/instances/redwoodBase.yaml` under `backend` and `frontend sections for reference.
         ```
 
         You would also need to change the port in the **Director Address** variable in the **Class Defaults** section of the **B_TitlePlayerController** blueprint in `/Content/GameFramework` using the `director.connection.frontend.port` config variable you specified above.

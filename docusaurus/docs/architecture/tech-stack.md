@@ -18,10 +18,17 @@ sidebar_position: 4
 - [Redis](https://redis.com): Used for data that needs to support horizontal scaling as well as provide a pub/sub broker between frontend and backend services
     - Custom stub: Redis doesn't work Windows, so Redwood provides a custom pure-JS Singleton/single-process stub for the Redis API for testing and most development cases.
     - [Memurai](https://www.memurai.com): For advanced Windows-only dev environments where the stub doesn't workout Redis, Memurai is a full replacement for Redis.
+- [ejabberd](https://www.ejabberd.im/): For [Text Chat](../features/social/text-chat.md) support
 
 ## Supported Third Party Services
 
-- [Hathora](https://hathora.dev): An alternative to self-hosting game servers with Agones; this is a 3rd party service for hosting on-demand, ephemeral game servers. You can easily support several regions without managing a Kuberentes cluster for each region. **We use Hathora for our Redwood Gameplay Template demos!**
-- [SendGrid](https://sendgrid.com): A transactional email provider for email verification, game news, relevant game events, etc.
-- [Idem](https://idem.gg): A matchmaking platform as a service that you can use instead of the OpenMatch integration.
-- [HCP Vault](https://vaultproject.io): HashiCorp's managed service for Vault secrets for specifying secrets in the configuration.
+- Server Hosting
+    - [Hathora](https://hathora.dev): An alternative to self-hosting game servers with Agones; this is a 3rd party service for hosting on-demand, ephemeral game servers. You can easily support several regions without managing a Kuberentes cluster for each region. **We use Hathora for our Redwood Gameplay Template demos!**
+- Transactional Email: for email verification, game news, relevant game events, etc.
+    - [ZeptoMail](https://zeptomail.zoho.com/)
+    - [SendGrid](https://sendgrid.com)
+- Secrets: for storing configuration secrets
+    - [HashiCorp Vault](https://developer.hashicorp.com/vault)
+    - [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
+    - [Azure Key Vault](https://azure.microsoft.com/products/key-vault)
+    - [Google Cloud Secret Manager](https://cloud.google.com/security/products/secret-manager)
