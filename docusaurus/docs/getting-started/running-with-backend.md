@@ -175,16 +175,18 @@ Several logs will print to the console as the backend initializes; wait until yo
     1. The backend is using uncooked data from the Unreal assets for the servers running, so you can't modify any of the Unreal assets while the servers are still running. You can stop the GameServerProxy's backing GameServerCollection (aka each of the shard servers for the world) by running the below command in the `RedwoodBackend` terminal you had open before:
 
         ```bash
-        yarn cli stop-proxy --env project-name <the-proxy-id-returned-from-the-start-proxy-command>
+        yarn cli stop-proxy --env project-name --name <the proxy-name>
         ```
 
-        For example, if your `start-proxy` command returned:
+        For example, from the prior `create-proxy` example, we used the name `overworld`.
+
+        You can also stop a proxy by its unique ID, which is returned in the `create-proxy` command.
 
         ```
         [05:47:18.119] INFO (70364): Proxy created successfully: cm1ol7o270001xhxi5z3d7fw2
         ```
 
-        then you would run:
+        then you would run (without the `--name` arg):
 
         ```bash
         yarn cli stop-proxy --env project-name cm1ol7o270001xhxi5z3d7fw2

@@ -1,11 +1,15 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 # Hathora
+
+:::danger
+Hathora has sunset their services. Existing clients may continue to use the platform through May 5 2026, but will cease to work after that. See the [Edgegap](./edgegap.md) provider as a similar option.
+:::
 
 [Hathora](https://hathora.dev) is Redwood's preferred on-demand hosting solution for various reasons:
 - The onboarding experience is fairly painless (and Redwood makes it dead-simple)
