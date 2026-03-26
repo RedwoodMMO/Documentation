@@ -5,11 +5,17 @@ authors: [mike]
 tags: [release, news]
 ---
 
+:::warning
+Hathora was acquired and is [sunsetting their games service](https://blog.hathora.dev/hathora-is-joining-fireworks-ai/) on May 5, 2026. We've added Edgegap as another on-demand game server hosting provider. Version 5.0 will remove the Hathora provider.
+:::
+
 ## Features
 
 - Better support for configuring Redwood in team environments
 - [Edgegap](https://redwoodmultiplayer.com/docs/features/game-servers/hosting/edgegap) game server hosting provider added
 - Added a `list-proxies` CLI command which shows not-ended proxies (proxies may be stopped but not ended)
+
+<!-- truncate -->
 
 ## Bug Fixes
 
