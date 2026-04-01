@@ -88,13 +88,13 @@ const config: Config = {
 
   themeConfig:
     {
-      // announcementBar: {
-      //   id: "new_year_26",
-      //   content: "<strong>Royalty-Free Licenses and Source Code Access are <a href='/#pricing' target='_blank' rel='noopener noreferrer'>15% OFF until January 31st</a>!</strong>",
-      //   backgroundColor: "#81301e",
-      //   textColor: "#fff",
-      //   isCloseable: false,
-      // },
+      announcementBar: {
+        id: "spring_26",
+        content: "<strong>Royalty-Free Licenses and Source Code Access are <a href='/#pricing' target='_blank' rel='noopener noreferrer'>25% OFF until April 15th</a>!</strong>",
+        backgroundColor: "#81301e",
+        textColor: "#fff",
+        isCloseable: false,
+      },
 
       // Replace with your project's social card
       image: "img/redwood/redwood-hero-card.jpg",
