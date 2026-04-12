@@ -54,7 +54,7 @@ The Ticketing service has two modes of execution: director (not to be confused w
 
 ## Sidecar
 
-Each Unreal game server has a corresponding NodeJS Sidecar. They run in the same container and handle the interaction with the [Realm](#realms) (e.g. getting/setting player/Realm data, receiving commands to load a map/mode when a match is allocated, providing lifecyle updates of the game server to the rest of the Redwood backend).
+Each Unreal game server has a corresponding Node.js Sidecar. They run in the same container and handle the interaction with the [Realm](#realms) (e.g. getting/setting player/Realm data, receiving commands to load a map/mode when a match is allocated, providing lifecyle updates of the game server to the rest of the Redwood backend).
 
 :::note
 These are not to be confused withe sidecars in service meshes, these sidecars follow a similar design philosophy but have no relationship to service meshes.

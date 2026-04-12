@@ -101,7 +101,7 @@ Deploying locally for basic configurations is fairly straight forward:
 
 1. Ensure Rancher Desktop is running
 1. Open a terminal to the `RedwoodBackend` directory
-1. Install the NodeJS dependencies by running the below command:
+1. Install the Node.js dependencies by running the below command:
 
     ```bash
     yarn

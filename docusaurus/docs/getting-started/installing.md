@@ -7,7 +7,7 @@ import TabItem from '@theme/TabItem';
 
 # Installing
 
-Redwood consists of two main components: Unreal plugins and the NodeJS backend. We'll go over how to integrate both of these into your development environment.
+Redwood consists of two main components: Unreal plugins and the Node.js backend. We'll go over how to integrate both of these into your development environment.
 
 ## Gameplay Template Projects
 
@@ -40,7 +40,7 @@ You can download the UE plugins by either:
 
 You'll want to place the contents of the RedwoodPlugins repo in your `Plugins` folder of your project or in your `Engine/Plugins` folder. For example `C:\Path\To\Project\Plugins\RedwoodPlugins\` or `C:\Path\To\UnrealSource\Engine\Plugins\RedwoodPlugins\`.
 
-## NodeJS Backend
+## Node.js Backend
 
 You can download the latest version of the Unreal backend from the [Downloads page](https://license.redwoodmmo.com/downloads) in the Redwood License Manager (assuming you [registered for an account](./getting-access.md#registering)). If you have full source code access, you can download the full source from the [GitHub repo](https://github.com/RedwoodMMO/Backend).
 
@@ -52,9 +52,22 @@ You can place the `RedwoodBackend` folder anywhere; we recommend either the root
 
 ### Backend Dependencies
 
-Follow the instructions [**here**](./prerequisites.md#nodejs) to install NodeJS and Yarn. You don't need the other dependencies listed on that page yet.
+Follow the instructions [**here**](./prerequisites.md#nodejs) to install Node.js if you haven't already.
 
-In the `RedwoodBackend` directory, run the below command to install the dependencies:
+In the `RedwoodBackend` directory, run the below command to turn on `corepack`, an internal Node.js tool:
+
+```bash
+corepack enable
+```
+
+Then make sure you can use the `yarn` executable (and that it's version is at least 4+):
+
+```bash
+yarn --version
+4.10.3
+```
+
+Then finally install the dependencies:
 
 ```bash
 yarn
@@ -253,7 +266,7 @@ As with any new Redwood project, you should create a new [config environment](..
 1. Generate two UUIDs for realm authentication for the next step. You can do this with an [online generator](https://www.uuidgenerator.net/version4).
 
     :::note
-    If you've [installed NodeJS & Yarn](./prerequisites.md#nodejs) and Redwood dependencies by running `yarn` in the `RedwoodBackend` directory, you can run `yarn id` in the `RedwoodBackend` directory to generate a UUID.
+    If you've [installed Node.js & Yarn](./prerequisites.md#nodejs) and Redwood dependencies by running `yarn` in the `RedwoodBackend` directory, you can run `yarn id` in the `RedwoodBackend` directory to generate a UUID.
     :::
 
 1. Set the contents of your `realm/instances/default.yaml` to the below; you can use this for any template project. In this config, we're:

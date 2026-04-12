@@ -98,7 +98,7 @@ Several logs will print to the console as the backend initializes; wait until yo
   <TabItem value="rpg" label="RPG Template">
     It's time to start the game, connect to the backend, start the overworld servers, and join!
 
-    1. [Install NodeJS/Yarn](./prerequisites.md#nodejs) if you haven't yet
+    1. [Install Node.js/Yarn](./prerequisites.md#nodejs) if you haven't yet
 
         :::info
         We need this extra dependency for persistent-server games since the server isn't started when matchmaking finds a match. Persistent games are assumed to already be started, so we need to use a provided tool to create and start that server before we try to join.

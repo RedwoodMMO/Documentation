@@ -5,7 +5,7 @@ sidebar_label: Overview
 
 # Configuration Overview
 
-You'll find in the Redwood backend directory a folder named `config`. This contains Dockerfile implementations, but these don't need to be modified. The main folder is `config/node` where all the configuration exists for the NodeJS backend microservices. In this directory you'll find several folders; each of which represent a separate set of configuration values.
+You'll find in the Redwood backend directory a folder named `config`. This contains Dockerfile implementations, but these don't need to be modified. The main folder is `config/node` where all the configuration exists for the Node.js backend microservices. In this directory you'll find several folders; each of which represent a separate set of configuration values.
 
 ## Default Values
 
@@ -15,7 +15,7 @@ The `default` folder contains every configuration variable that exists, along wi
 
 If you look inside the `default` config environment, you'll see a set of YAML files and folders that contain more YAML files. While it's possible to use JSON to configure Redwood, this is undocumented and mostly unsupported. You can find documentation on the YAML syntax [here](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html).
 
-Variables in the NodeJS service are accessed using a call like this:
+Variables in the Node.js service are accessed using a call like this:
 
 ```typescript
 const value: type = config.get<type>("path.to.variable");

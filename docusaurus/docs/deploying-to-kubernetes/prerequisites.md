@@ -16,7 +16,7 @@ The prerequisites you installed when you got started were to be able to run Redw
 - [Windows Subsystem for Linux (WSL)](#wsl)
 - [Rancher Desktop](#rancher-desktop)
 
-## NodeJS
+## Node.js
 
 This was moved into the [Getting Started](../getting-started/prerequisites.md#nodejs) section.
 
@@ -28,7 +28,7 @@ The version of Unreal Engine that you download from the Epic Games Launcher does
 
 ## Pulumi
 
-There are multiple frameworks to define IaC; we use [Pulumi](https://www.pulumi.com/) which is built on top of the popular framework [Terraform](https://www.terraform.io/). Pulumi allows us to write the IaC as NodeJS/TypeScript instead of having to learn the declarative scripting language Terraform uses.
+There are multiple frameworks to define IaC; we use [Pulumi](https://www.pulumi.com/) which is built on top of the popular framework [Terraform](https://www.terraform.io/). Pulumi allows us to write the IaC as Node.js/TypeScript instead of having to learn the declarative scripting language Terraform uses.
 
 Pulumi also has a backend service (Pulumi Cloud) that keeps track of the versions that are deployed to determine the iterative changes that are necessary when trying to deploy. Having this as a service is very helpful if you need multiple people to be able to deploy. [pulumi.com](https://www.pulumi.com/) provides managed hosting for Pulumi Cloud with a fairly comprehensive free tier, but you can also [self-host](https://www.pulumi.com/product/self-hosted/).
 

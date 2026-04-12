@@ -16,7 +16,7 @@ Redwood's backend infrastructure is built with flexibility in mind; it's designe
 
 For example, switching from AWS to Azure is as simple as changing a few configuration parameters or leveraging one of Redwood's configuration presets. We also created the backend software to be understandable and flexible to quickly add new features. The backend provides a plethora of configuration options so that it's flexible while supporting more complex environments.
 
-Redwood's backend is completely written in NodeJS so you can quickly integrate most third party services with a free [NPM module](https://npmjs.com). While there are other options to implement a backend service, we believe that the NodeJS ecosystem provides ultimate flexibility for integrating services and technologies. It's easy to understand and approachable by many developers, so extending functionality for a new gameplay feature, such as a global trading marketplace that integrates with a mobile companion app, is within reach.
+Redwood's backend is completely written in Node.js so you can quickly integrate most third party services with a free [NPM module](https://npmjs.com). While there are other options to implement a backend service, we believe that the Node.js ecosystem provides ultimate flexibility for integrating services and technologies. It's easy to understand and approachable by many developers, so extending functionality for a new gameplay feature, such as a global trading marketplace that integrates with a mobile companion app, is within reach.
 
 ## Gameplay Templates
 

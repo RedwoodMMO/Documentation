@@ -26,7 +26,7 @@ The `k8s` config variables determine how the realm is deployed to the cluster. T
 
 ## Persistence
 
-The `persistence.database` config variables define the PostgreSQL details for both `runtime-access` (how the NodeJS services access the database, this could be an internal Kubernetes service [see `RedwoodBackend/config/node/kubernetes/realm/instances/default.yaml` for an example] or a private network details for your managed database) and `deployment-access` (how the deployment scripts get access, usually a public endpoint).
+The `persistence.database` config variables define the PostgreSQL details for both `runtime-access` (how the Node.js services access the database, this could be an internal Kubernetes service [see `RedwoodBackend/config/node/kubernetes/realm/instances/default.yaml` for an example] or a private network details for your managed database) and `deployment-access` (how the deployment scripts get access, usually a public endpoint).
 
 The `persistence.blobs` config variables define the [Blob Storage](../features/data/storage/blob-storage.md) details.
 
