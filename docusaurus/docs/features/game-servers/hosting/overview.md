@@ -10,7 +10,7 @@ Most of the backend microservices are hosted in a Kubernetes cluster alongside e
 - [**Local**](./local.md) - Used in development when not using Kubernetes; these game servers are self-hosted by executing a process on your machine, enabling the fastest iteration time
 - [**Agones**](./agones.md) - The game servers are self-hosted in the same Kubernetes cluster as the backend microservices
 - [**Edgegap**](./edgegap.md) - Edgegap provides on-demand game server hosting with the option of bare-metal fleets
-- ~~[**Hathora**](./hathora.md)~~ - Hathora has sunset their gaming services and will stop functioning after May 5 2026
+- ~~**Hathora**~~ - Hathora has sunset their gaming services and will stop functioning after May 5 2026
 
 In the linked pages above, we cover the specifics of using each option, but here is a summary of when to choose each option.
 

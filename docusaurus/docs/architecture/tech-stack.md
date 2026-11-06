@@ -22,8 +22,6 @@ sidebar_position: 4
 
 ## Supported Third Party Services
 
-- Server Hosting
-    - [Hathora](https://hathora.dev): An alternative to self-hosting game servers with Agones; this is a 3rd party service for hosting on-demand, ephemeral game servers. You can easily support several regions without managing a Kuberentes cluster for each region. **We use Hathora for our Redwood Gameplay Template demos!**
 - Transactional Email: for email verification, game news, relevant game events, etc.
     - [ZeptoMail](https://zeptomail.zoho.com/)
     - [SendGrid](https://sendgrid.com)

@@ -42,7 +42,6 @@ Now you can change your Net Mode to **Play Client** and start PIE for the multip
 That's it! You're developing with Redwood; you can do most of your development using what you've learned so far.
 
 When you're ready to continue learning more about Redwood, here are some follow up topics:
-- **[Learn how to use the Hathora Game Servers in Development](../features/game-servers/hosting/hathora.md#using-hathora-game-servers-in-development)**
 - **[Deploying to Kubernetes (locally and to the cloud)](../deploying-to-kubernetes/prerequisites.md)**
 - **[Understanding the Redwood architecture](../architecture/overview.md)**
 - **[Learning more about the available configuration options](../configuration/overview.md)**

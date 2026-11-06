@@ -12,7 +12,7 @@ When players log into the Redwood Director (which is the very first thing they'l
 
 ## Regions
 
-Realms do not need to be bound to a single region. Traditionally speaking, for the standard MMORPG example, they would be in a single region, but many match-based games will have a single Realm for the entire game and have matches hosted by game server instances all over the globe. As of right now using the [Hathora](./game-servers/hosting/hathora.md) game server provider is the only supported mechanism to have multiple regions in a single Realm.
+Realms do not need to be bound to a single region. Traditionally speaking, for the standard MMORPG example, they would be in a single region, but many match-based games will have a single Realm for the entire game and have matches hosted by game server instances all over the globe. As of right now using the Hathora game server provider is the only supported mechanism to have multiple regions in a single Realm.
 
 ## Adding More Realms
 

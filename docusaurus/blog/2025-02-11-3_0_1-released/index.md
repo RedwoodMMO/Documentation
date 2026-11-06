@@ -29,7 +29,7 @@ This coincides with the Redwood `3.0.1` release which fixes several bugs and is 
 - [Backend (Deployment)] Fix issues preventing multiple realms in the same Kubernetes cluster
 - [Backend (Deployment)] Fix issues with configuration being slightly corrupted for Kubernetes environments
 - [Backend (CLI)] Fix connecting to backend with `yarn cli` commands when the backend is using TLS
-- [Backend (Hathora)] Disable connecting to Redis for [Hathora](/docs/features/game-servers/hosting/hathora) game servers (which means sync items will not work for Hathora servers; persistence will still work)
+- [Backend (Hathora)] Disable connecting to Redis for Hathora game servers (which means sync items will not work for Hathora servers; persistence will still work)
 - [Backend (Hathora)] Fix `yarn package:hathora` script
 
 ## New Features

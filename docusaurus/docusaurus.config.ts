@@ -66,6 +66,19 @@ const config: Config = {
 
           sidebarCollapsed: true,
           sidebarCollapsible: true,
+
+          // 5.x is served at /docs; the working copy in ./docs is served at /docs/next
+          lastVersion: "5.x",
+          versions: {
+            current: {
+              label: "Next",
+              path: "next",
+              banner: "unreleased",
+            },
+            "5.x": {
+              label: "5.x",
+            },
+          },
         },
         blog: {
           showReadingTime: true,
@@ -113,6 +126,10 @@ const config: Config = {
           },
           { to: "https://github.com/orgs/RedwoodMMO/projects/1/views/1", label: "Roadmap", position: "left" },
           { to: "/blog", label: "Blog", position: "left" },
+          {
+            type: "docsVersionDropdown",
+            position: "right",
+          },
           {
             href: "https://license.redwoodmmo.com",
             label: "License Manager",

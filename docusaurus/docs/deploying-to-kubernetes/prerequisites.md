@@ -22,7 +22,7 @@ This was moved into the [Getting Started](../getting-started/prerequisites.md#no
 
 ## Compile Unreal from Source
 
-The version of Unreal Engine that you download from the Epic Games Launcher doesn't include the `Server` target used to packaged dedicated servers, which is necessary for deploying to Kubernetes or using [Hathora in development](../features/game-servers/hosting/hathora.md#using-hathora-game-servers-in-development).
+The version of Unreal Engine that you download from the Epic Games Launcher doesn't include the `Server` target used to packaged dedicated servers, which is necessary for deploying to Kubernetes.
 
 **Unreal has a great [guide on building Unreal from source for each OS](https://dev.epicgames.com/documentation/unreal-engine/building-unreal-engine-from-source).**
 
