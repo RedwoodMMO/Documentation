@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 import Tabs from '@theme/Tabs';
@@ -7,25 +7,27 @@ import TabItem from '@theme/TabItem';
 
 # Running with the Backend
 
+Time to see it all work together: we'll start the backend locally, log in from Play-In-Editor, and get into a server that the backend started for us.
+
 ## Launching the Backend
+
+Locally, the whole backend runs in a single process called the **Dev Initiator**. It starts the Director, each deployed realm's services, ticketing, and an in-memory Redis stub, and it creates local SQLite databases. Game servers are started on demand with your Unreal editor executable.
 
 <Tabs>
   <TabItem value="standard" label="Standard License" default>
-    Open a terminal and navigate to the `RedwoodBackend` directory. Run the below command after replacing `<your-config-env>` with the name of the config folder you created earlier:
+    Open a terminal in the `RedwoodBackend` directory and run the below command after replacing `<your-config-env>` with the name of the config environment you created in [Installing](./installing.md#initial-configuration):
 
     ```bash
-    ./dev-initiator-win <your-config-env>
+    ./dev-initiator-win.exe <your-config-env>
     ```
 
-    The specific syntax of whether you include the `./` or not may be dependent on your terminal.
-
-    macOS and Linux users can use `dev-initiator-mac` and `dev-initiator-lin` instead, respectively.
+    macOS and Linux users can use `./dev-initiator-mac` and `./dev-initiator-lin` instead, respectively. Always run it from the `RedwoodBackend` directory, since it looks for the `config` folder and the installed dependencies relative to where you run it.
   </TabItem>
   <TabItem value="custom" label="Custom License">
-    You can run the Dev Initiator with running the below command in the `RedwoodBackend` directory:
+    In the `RedwoodBackend` directory, run:
 
     ```bash
-    yarn dev <config-environment>
+    yarn dev <your-config-env>
     ```
 
     **For example**: `yarn dev project-name`.
@@ -34,211 +36,128 @@ import TabItem from '@theme/TabItem';
 
 Several logs will print to the console as the backend initializes; wait until you see `All services ready`.
 
-## Running the Game
+:::warning Your local data is wiped on every start
+By default, the Dev Initiator deletes the local databases each time it starts (`environment.clean-db-on-dev-initiator-start: true`), so accounts, characters, and servers don't survive a restart. This keeps development predictable, but if you'd rather keep your data, add this to your config environment's `_index.yaml`:
+
+```yaml
+environment:
+  clean-db-on-dev-initiator-start: false
+```
+
+The databases are the `director-dev.db` and `realm-default-dev.db` files in the `RedwoodBackend` directory.
+:::
+
+If the Dev Initiator exits right away with an error about the config environment, double check the name you passed matches your folder (and that the folder is in `config/node` or one of your `extraDirs`). You can't run it with the `default` environment.
+
+## Your First Login
+
+1. Make sure **Use Backend in PIE** is enabled ([Setting Up Unreal](./setting-up-unreal.md#editor-preferences)).
+1. Open your title map.
+1. In the **Play** button's dropdown, set **Net Mode** to **Play Standalone**. Your title map runs as a normal client; the backend starts the actual servers.
+1. Press **Play**.
+1. Your menu should connect to the Director. If it's stuck connecting, see [Troubleshooting](#troubleshooting).
+1. Register an account. Any username and password works locally; we use `test` and `test` for quick iteration. Then log in.
+1. Connect to the realm and create a character.
+
+You can watch all of this happen in the Dev Initiator's console.
+
+:::tip Testing with multiple players
+Set **Number of Players** in the Play dropdown to open several PIE windows; each one is a separate client that can log in as a different account. You can also launch extra clients outside the editor with **Standalone Game** mode, which always uses the backend.
+:::
+
+## Getting into a Server
+
+How you get into a server depends on the kind of game you configured in your [`game.yaml`](./installing.md#initial-configuration).
 
 <Tabs>
-  <TabItem value="match" label="Match Template" default>
-    It's time to start the game, connect to the backend, and join a match!
+  <TabItem value="match" label="Match-based game" default>
+    Use your play screen to either:
 
-    1. Once the project is created and shaders are compiled, you will see the default Lyra level selected:
+    - **Join Matchmaking** with your profile ID (e.g. `deathmatch`). With `min-players-for-matchmaking: 1`, a match is made with just you after `max-wait-until-make-shallow-match-ms`.
+    - **Create Proxy** with `bJoinSession` enabled to host a lobby, or **List Proxies** and **Join Proxy with Single Instance** to join one another client created.
 
-        ![Match Template Default Level](/img/match-open-new-project.jpg)
+    The backend then starts a game server for the match by running your project with `UnrealEditor.exe -server`. The server boots into your idle server map, Redwood tells it which map and game mode to load, and once it's ready your client travels there automatically.
 
-    1. Open the Content Browser and open the level `/Content/Redwood/Frontend/L_RW_LyraFrontEnd`:
-
-        ![Match Template open Redwood Frontend Level](/img/match-open-rw-level.jpg)
-
-    1. Make sure you've selected `Play Standalone` under the PIE **Net Mode** (it's the default) and are still in the `L_RW_LyraFrontEnd` level:
-
-        ![Match Template select standalone](/img/match-play-standalone.jpg)
-
-    1. Press the green play button:
-
-        ![Match Template play button](/img/match-play.jpg)
-
-    1. You should see the Lyra frontend widget with the `LOGIN`/`REGISTER` buttons enabled:
-
-        ![Match Template frontend](/img/match-frontend.jpg)
-
-        :::warning
-        If you see these buttons greyed out/disabled and a label saying `Connecting to backend...`, there are some a few common issues:
-        - You have another application bound to the port `3001`
-        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `director.localhost`
-        - You started PIE before the Dev Initiator hasn't finished initializing. The connection retry logic will get exponentially slower after each retry, so you may need to restart PIE
-        :::
-
-    1. Register to create an account; any username/password works here. We use `test` and `test` for quick iteration.
-    1. Login using the same username/password. The `Remember Me` functionality is part of the Redwood plugin. It will save a `RedwoodSaveGame.sav` file in the `SaveGames` folder with an authentication token to automatically login when the game starts the next time.
-
-        :::warning
-        If you were able to register but the login process seems to hang for more than 5 seconds, you're likely having issues connecting to the Realm Frontend service. The common issues for that are similar:
-        - You have another application bound to the port `3011`
-        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `realm-default.localhost`
-        :::
-
-    1. You should be able to see a `PLAY` button now:
-
-        ![Match Template logged in](/img/match-logged-in.jpg)
-
-    1. Select `PLAY`; from here, you can either select `MATCHMAKING` or `START LOBBY` to create a match. The `JOIN LOBBY` button will show a list of existing public lobbies.
-
-        :::note
-        It may take awhile for the server to load the first time. You may get a timeout and need to try again. If your ticket keeps going stale, you can increase the `ticket-stale-time-ms` variable you [set earlier](./installing.md#initial-configuration) and restart the Dev Initiator.
-        :::
-
-        <video alt="Match Template example cycle" controls width="100%" height="auto">
-          <source src="https://cdn.incanta.games/redwood/website/match-example-cycle.mp4" type="video/mp4"/>
-          Your browser does not support the video tag.
-        </video>
-
-        :::info
-        Server initialization is shorter in a packaged/cooked game. When running with the `local` [game server provider](../features/game-servers/hosting/overview.md), you're using uncooked content through `UnrealEditor.exe`. Using the `agones` game server provider will have the shortest initialization time due always having a warm server already started waiting to get the match details. Hathora's startup time is also quite fast, with their Enterprise tier having the best performance.
-        :::
+    **Note:** the first server start can take a while (shaders, asset compilation, and an uncooked editor process). If your ticket goes stale or you see a timeout, increase `ticket-stale-time-ms` and `game-servers.ready-timeout-seconds` in your realm instance config and restart the Dev Initiator. Cooked servers on [Kubernetes](../deploying-to-kubernetes/prerequisites.md) start much faster, especially with Agones keeping warm servers ready.
   </TabItem>
-  <TabItem value="rpg" label="RPG Template">
-    It's time to start the game, connect to the backend, start the overworld servers, and join!
+  <TabItem value="persistent" label="Persistent world">
+    Persistent worlds are expected to already be running before players join, so you need to create the world's [GameServerProxy](../architecture/game-servers.md#gameserverproxy) first. There are two ways to do that.
 
-    1. [Install Node.js/Yarn](./prerequisites.md#nodejs) if you haven't yet
+    **Option 1: Let the realm create it on boot (recommended for local development).** Add this to your `realm/instances/default.yaml`:
 
-        :::info
-        We need this extra dependency for persistent-server games since the server isn't started when matchmaking finds a match. Persistent games are assumed to already be started, so we need to use a provided tool to create and start that server before we try to join.
-        :::
+    ```yaml
+    default-proxy:
+      create-on-first-boot:
+        enabled: true
+        name: "World"
+      profile-id: "overworld" # your persistent profile's id
+      start-on-boot: true
+    ```
 
-    1. Once the project is created and shaders are compiled, you will see the default L_Overworld level selected:
+    When the realm starts, it creates a proxy named `World` if one doesn't exist yet and starts its servers (after `start-proxies-on-boot-delay-seconds`, 15 seconds by default). Since the Dev Initiator wipes the database on every start, the world is recreated fresh each time. See [Default Proxy](../features/realms.md#default-proxy) for the other options.
 
-        ![RPG Template Default Level](/img/rpg-open-project.jpg)
+    **Option 2: Use the CLI.** With the Dev Initiator running, open another terminal in the `RedwoodBackend` directory and run:
 
-    1. Open the Content Browser and open the level `/Content/Maps/L_Title`:
+    ```bash
+    yarn cli create-proxy overworld World --env project-name --start-on-boot --proxy-ends
+    ```
 
-        ![RPG Template open Frontend Level](/img/rpg-open-title-level.jpg)
+    The first argument is the profile ID and the second is the proxy's name. The [CLI](../features/cli.md) logs in as the backend's admin user, which is created automatically. `--start-on-boot` starts the proxy right away (and on future boots, if you keep your data), and `--proxy-ends` ends the proxy when its servers stop so you get a clean world next time. Wait for `Proxy created successfully: <proxy-id>`.
 
-    1. Make sure you've selected `Play Standalone` under the PIE **Net Mode** (it's the default) and are still in the `L_Title` level:
+    Either way, the backend starts one server per zone (each zone runs its own `UnrealEditor.exe -server` process, using roughly 1 to 2 GB of RAM each with uncooked content). Then use **List Proxies** to find the proxy's ID and **Join Queue** with that ID and the zone to enter (e.g. `town`). You'll be admitted and travel to the zone's server.
 
-        ![RPG Template select standalone](/img/rpg-play-standalone.jpg)
+    To stop the world's servers (e.g. so you can edit assets they have loaded), run:
 
-    1. Press the green play button:
+    ```bash
+    yarn cli stop-proxy World --name --env project-name
+    ```
 
-        ![RPG Template play button](/img/rpg-play.jpg)
-
-    1. You should see the frontend widget with the `REGISTER`/`LOGIN` buttons enabled:
-
-        ![RPG Template frontend](/img/rpg-frontend.jpg)
-
-        :::warning
-        If you see these buttons greyed out/disabled and a label saying `Connecting to backend...`, there are some a few common issues:
-        - You have another application bound to the port `3001`
-        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `director.localhost`
-        - You started PIE before the Dev Initiator hasn't finished initializing. The connection retry logic will get exponentially slower after each retry, so you may need to restart PIE
-        :::
-
-    1. Register to create an account; any username/password works here. We use `test` and `test` for quick iteration.
-    1. Login using the same username/password.
-
-        :::warning
-        If you were able to register but the login process seems to hang for more than 5 seconds, you're likely having issues connecting to the Realm Frontend service. The common issues for that are similar:
-        - You have another application bound to the port `3011`
-        - You did not configure your [`hosts` file](./installing.md#configure-hosts-file) properly to include `realm-default.localhost`
-        :::
-
-    1. You should be able to see a dropdown and be able to create a character:
-
-        <video alt="RPG Template create character" controls width="100%" height="auto">
-          <source src="https://cdn.incanta.games/redwood/website/rpg-create-character.mp4" type="video/mp4"/>
-          Your browser does not support the video tag.
-        </video>
-
-    1. Before you can join the server, we need to create it:
-
-        1. Open a terminal to the `RedwoodBackend` directory
-
-        1. Start a [GameServerProxy](../architecture/game-servers.md#gameserverproxy) using the [preconfigured](./installing.md#initial-configuration) `overworld` [game profile](../configuration/game-modes-and-maps.md#profiles) (changing the env arg to your config environment name):
-
-            ```bash
-            yarn cli create-proxy overworld overworld --env project-name --start-on-boot --proxy-ends --public
-            ```
-
-            :::note
-            The `--start-on-boot` flag will not only start this proxy when the backend boots up (and it hasn't ended), it will also start it immediately. Only admin users can specify this flag.
-
-            The `--proxy-ends` flag will end the GameServerProxy when the backing GameServerCollection ends. You typically wouldn't set this for production realms/worlds as you'd want to keep them around perpetually even if the servers stop temporarily (i.e. during a game server upgrade). However, often times in development, it may be beneficial to start with a clean slate world each time we restart it, hence specifying it here.
-
-            Starting this up will automatically run a shard/server for each of the zones (5 for this template). This involves running the UnrealEditor.exe for each shard, which can consume a bit of RAM (~1.2GB for each shard).
-            :::
-
-    1. Once the terminal says `Proxy created successfully` you can press the `Join` button in Unreal to queue for the proxy/world and be admitted:
-
-        <video alt="RPG Template queue into Overworld" controls width="100%" height="auto">
-          <source src="https://cdn.incanta.games/redwood/website/rpg-queue-into-overworld.mp4" type="video/mp4"/>
-          Your browser does not support the video tag.
-        </video>
-
-    1. The backend is using uncooked data from the Unreal assets for the servers running, so you can't modify any of the Unreal assets while the servers are still running. You can stop the GameServerProxy's backing GameServerCollection (aka each of the shard servers for the world) by running the below command in the `RedwoodBackend` terminal you had open before:
-
-        ```bash
-        yarn cli stop-proxy --env project-name --name <the proxy-name>
-        ```
-
-        For example, from the prior `create-proxy` example, we used the name `overworld`.
-
-        You can also stop a proxy by its unique ID, which is returned in the `create-proxy` command.
-
-        ```
-        [05:47:18.119] INFO (70364): Proxy created successfully: cm1ol7o270001xhxi5z3d7fw2
-        ```
-
-        then you would run (without the `--name` arg):
-
-        ```bash
-        yarn cli stop-proxy --env project-name cm1ol7o270001xhxi5z3d7fw2
-        ```
-
-  </TabItem>
-  <TabItem value="blank" label="Blank Template">
-    1. In the Unreal project you created earlier, open the `/Content/Maps/L_Title` map.
-    1. Change the **Net Mode** in the play settings to **Play Standalone**
-    1. Optionally change the number of players to whatever you'd like. Below we'll just show the steps for a single player, but you can repeat them to get multiple players in the same match.
-    1. Click the **Play** button
-    1. You should now see the **Register**, **Login**, and **Quit** buttons:
-
-        ![Title screen connected to the backend](/img/testing-match-connected.jpg)
-
-        If you're stuck seeing the **Connecting to the director...** screen, make sure you've launched the `dev-initiator.exe` program, there are no errors, and double check any firewall/security prompts that may be preventing it from connecting.
-
-        ![Title screen connecting to the backend](/img/testing-match-failing-to-connect.jpg)
-
-        :::note
-        If you're still having trouble connecting, make sure you don't have other applications using conflicting ports. The Redwood backend by default runs on ports `3000` and `3001`. These config variables can be changed by adding them overriding your director and realm instance configs. See `config/node/default/director.yaml` and `config/node/default/realm/instances/redwoodBase.yaml` under `backend` and `frontend sections for reference.
-        ```
-
-        You would also need to change the port in the **Director Address** variable in the **Class Defaults** section of the **B_TitlePlayerController** blueprint in `/Content/GameFramework` using the `director.connection.frontend.port` config variable you specified above.
-        :::
-
-    1. Click the **Register** button and enter a username and password. If that's successful, you'll be automatically logged in and see the character selection screen. Press the `+` button to create a new character:
-
-        ![Character selection screen](/img/testing-match-character-selection.jpg)
-
-    1. Enter a character name and click **Create**. You'll be taken back to the character selection screen. You should see your new character in the drop down menu:
-
-        ![Character selection screen](/img/testing-match-character-selection-1.jpg)
-
-    1. After selecting your character, click the **Join** button to join the matchmaking queue:
-
-        ![Joining queue](/img/testing-match-joining-queue.jpg)
-
-        ![Match found](/img/testing-match-match-found.jpg)
-
-        ![Server allocated](/img/testing-match-server-allocated.jpg)
-
-    1. If you're seeing the below error, you didn't correctly [configure the backend](./installing.md#initial-configuration) to point to your project:
-
-        ![Server allocation error](/img/testing-match-invalid-project.jpg)
-
-    1. If everything was configured properly, any clients that signed up before should be put into a match. The **Blank** template has a simple match where players can move around as a floating cube with WASD and the mouse.
-
-        ![In a match](/img/testing-match-in-match.jpg)
+    `--name` tells the CLI the argument is the proxy's name rather than its ID. If you created the proxy with `--proxy-ends`, stopping its servers also ends the proxy, so you'll create a new one next time. Otherwise (including the default proxy from Option 1, which doesn't end by default), start it again with `yarn cli start-proxy World --name --env project-name`.
   </TabItem>
 </Tabs>
 
+When you're in, you're playing on a dedicated server that Redwood started, authenticated against, and loaded your character on. 🎉
+
+:::info
+The servers run your **uncooked** content through the editor executable, which locks the assets they've loaded. Stop the servers (or let the match end) before saving changes to assets they're using.
+:::
+
+## Where to Find Logs
+
+| What | Where |
+| --- | --- |
+| Backend (Director, realm, ticketing, and sidecars) | The Dev Initiator's console. Set `logging.level` to `debug` or `trace` in your config environment for more detail, or enable `logging.log-file`. |
+| Game servers | `YourProject/Saved/Logs/YourProject*.log` (search for `LogRedwood`). Add `-log` to `game-servers.local.arguments` to open a log window per server, or set `game-servers.local.log-to-terminal: true` to print server output in the Dev Initiator's console. |
+| Game client | The Output Log in the editor (filter by `LogRedwood`) |
+
+## Troubleshooting
+
+**The menu is stuck connecting to the Director**
+
+- Make sure the Dev Initiator is running and printed `All services ready`. If you pressed Play before it finished, the client retries on its own, but the retry delay grows each time; restart PIE if you don't want to wait.
+- Make sure nothing else is using port `3001` (the Director Frontend) on your machine.
+- Make sure the **Director Uri** in **Project Settings > Plugins > Redwood** is `ws://localhost:3001` or `ws://director.localhost:3001`, and if you're using the latter, that your [hosts file](./installing.md#configure-hosts-file) has `director.localhost`.
+- Make sure **Use Backend in PIE** is enabled. Without it, Redwood doesn't connect at all (it pretends to succeed).
+
+**Logging in works but connecting to the realm hangs**
+
+- Make sure nothing else is using port `3011` (the Realm Frontend).
+- Make sure your hosts file has `realm-default.localhost`.
+
+**Matchmaking or joining never gets you into a server**
+
+- Check the Dev Initiator's console for errors. `Executable not found at path` or `Project not found at path` means the `game-servers.local` paths in your realm instance config are wrong.
+- Make sure your hosts file has `realm-default-backend.localhost`; the game server's sidecar uses it to connect to the realm.
+- Check the game server's log. If it never finishes starting, the most common causes are a missing [Asset Manager](./setting-up-unreal.md#asset-manager) entry, a profile `id` or map ID in `game.yaml` that doesn't match a Data Asset's **Redwood Id** (`Invalid ModeId or MapId`), or a slow first start (increase `game-servers.ready-timeout-seconds`).
+- If your ticket goes stale before the server is ready, increase `ticketing.matchmaking.ticket-stale-time-ms`.
+
+**You get kicked right after joining**
+
+- `Could not load player character data` means a `URedwoodCharacterComponent` is looking for data variables that don't exist. See [Saving Player Data](./saving-player-data.md).
+- `Sidecar is not connected` means the server's **Servers Auto Connect to Sidecar** setting is off.
+
+There's a longer list of symptoms and fixes on the [Troubleshooting](../support/troubleshooting.md) page.
+
 :::success
-That's it! You're using Redwood to start your servers and route clients into those servers via matchmaking or queueing! Let's learn how to run things [**without the backend running**](./running-without-backend.md) for faster development iterations.
+You're using Redwood to start your servers and route clients into them! Next, let's **[save the player's character data](./saving-player-data.md)**.
 :::

@@ -45,8 +45,22 @@ const config: Config = {
             to: "/docs/features/transactional-email/overview",
           },
           {
-            from: "/docs/miscellaneous/integrating-redwood",
-            to: "/docs/getting-started/integrating-redwood",
+            from: [
+              "/docs/miscellaneous/integrating-redwood",
+              "/docs/getting-started/integrating-redwood",
+            ],
+            to: "/docs/getting-started/setting-up-unreal",
+          },
+          {
+            from: [
+              "/docs/miscellaneous/lyra-modifications",
+              "/docs/miscellaneous/netdriver-docs",
+            ],
+            to: "/docs/getting-started/setting-up-unreal",
+          },
+          {
+            from: "/docs/architecture/player-flow",
+            to: "/docs/architecture/overview",
           },
         ],
       },
@@ -155,10 +169,6 @@ const config: Config = {
               {
                 label: "Getting Started",
                 to: "/docs/getting-started/overview",
-              },
-              {
-                label: "Intro to Multiplayer",
-                to: "/docs/support/intro-to-multiplayer",
               },
               {
                 label: "Architecture Overview",

@@ -27,11 +27,26 @@ By default, Memurai has no password for the database, so make sure `persistence.
 
 It's highly recommended to change the password via `persistence.redis.password`, which defaults to `password` when inheriting from the `kubernetes` config environment.
 
-The Master and Replicas services are configured for you, so you shouldn't need to change these unless you are using an external Redis installation. These can be configured via `persistence.redis.master/replicas` object config variables.
+The Redis connection is configured for you, so you shouldn't need to change it unless you're using an external Redis installation. Redwood connects to the host and port in `persistence.redis.master` (`persistence.redis.replicas` exists in the config but isn't currently used).
 
-If you want to increase the number of replicas, you can change the `deployment.dependencies.redis.values.replica.replicaCount` config variable, which defaults to `0`.
+The in-cluster Redis is deployed with the Bitnami `redis` Helm chart (using the `bitnamilegacy/redis` image), configured under `deployment.dependencies.redis.values`. If you want to add replicas, change `deployment.dependencies.redis.values.replica.replicaCount`, which defaults to `0`.
 
-Redwood has designed to not need Redis data to persist, but if you find that some scenarios might require it, or you would prefer the piece of mind, you can configure this via the Helm configuration in `deployment.dependencies.redis.values.master/replica.persistence`. You can see that persistence is disabled by default by looking at `RedwoodBackend/config/node/deployment/dependencies/redis.yaml`. There are lots of available persistence values for the Helm chart, which you can read into more in the [ArtifactHUB page](https://artifacthub.io/packages/helm/bitnami/redis) (and searching for `persistence`).
+Redwood is designed not to need Redis data to persist, but if you find that some scenarios require it, or you'd prefer the peace of mind, you can configure it via the Helm values in `deployment.dependencies.redis.values.master/replica.persistence`. You can see that persistence is disabled by default in `RedwoodBackend/config/node/default/deployment/dependencies/redis.yaml`. There are lots of available persistence values for the Helm chart, which you can read more about on the [ArtifactHUB page](https://artifacthub.io/packages/helm/bitnami/redis) (search for `persistence`).
+
+The default chart values also limit Redis to `400mb` of memory with the `noeviction` policy, so Redis rejects writes instead of being killed for running out of memory. If you raise the pod's memory limit, raise `maxmemory` in `deployment.dependencies.redis.values.master.configuration` too.
+
+### Job Retention
+
+When using real Redis, Redwood uses [BullMQ](https://docs.bullmq.io/) to send jobs between services. Finished jobs are cleaned up according to `persistence.redis.jobs.auto-remove`:
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `persistence.redis.jobs.auto-remove.completed.immediately` | `true` | Remove completed jobs right away (the settings below are ignored when `true`) |
+| `persistence.redis.jobs.auto-remove.completed.age-hours` / `count` | `720` / `100` | Otherwise keep completed jobs for up to this many hours and this many entries per job type |
+| `persistence.redis.jobs.auto-remove.failed.immediately` | `false` | Remove failed jobs right away |
+| `persistence.redis.jobs.auto-remove.failed.age-hours` / `count` | `720` / `100` | Otherwise keep failed jobs for up to this many hours and this many entries per job type |
+
+Keeping jobs around is handy for debugging, but they use Redis memory, so keep these limits in place in production.
 
 ## Installing Memurai
 

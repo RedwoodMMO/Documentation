@@ -20,16 +20,26 @@ Before you can use Agones, you need prepare the game server so it can be contain
 
 From here, the Pulumi deployment scripts will be able to package the game server into a Docker container and prepare the Agones fleet during Kubernetes deployment.
 
-You can see more details about this process in [Deploying Locally to Kubernetes](../../../deploying-to-kubernetes/deploying-locally#deploying).
+You can see more details about this process in [Deploying Locally to Kubernetes](../../../deploying-to-kubernetes/deploying-locally.md#deploying).
 
 ## Fleet configuration
 
 The default Agones [Fleet](https://agones.dev/site/docs/reference/fleet/) used is defined in `RedwoodBackend/config/node/default/realm/instances/redwoodBase.yaml` with the `game-servers.agones.fleet` config variable. Redwood simplifies the configuration to specifying the name of the image (which automatically refers to values of other config variables), the resources limits/requests to be used, and how the Agones [Ready Buffer Autoscaler](https://agones.dev/site/docs/reference/fleetautoscaler/#ready-buffer-autoscaling) is configured.
 
-**Redwood currently doesn't support other types of autoscalers**, but it should be easy for you to add support to them by modifying `RedwoodBackend/packages/deployment/src/agones/agones.ts` (see the `installFleetAutoscaler()` function). If you have a Premium Support subscription, [reach out](../../../support/how-to-get-support.md) and we should be able to help with adding support for the autoscaler type you need.
+**Redwood currently doesn't support other types of autoscalers**, but it should be easy for you to add support for them by modifying `RedwoodBackend/packages/deployment/src/agones/agones.ts` (the autoscaler is created in the `installFleet()` function). If you have a Premium Support subscription, [reach out](../../../support/how-to-get-support.md) and we should be able to help with adding support for the autoscaler type you need.
 
-**Redwood also doesn't currently support more than one fleet per instance of Agones.** This is less trivial of a modification for you to add, but definitely feasible, and we encourage Premium Support subscribers to [reach out](../../../support/how-to-get-support.md) if you need this.
+**Redwood deploys one fleet per realm** (in the realm's namespace, `realm-<realm-key>` by default), so every server in a realm uses the same game server image and resources. Supporting multiple fleets per realm (e.g. different machine sizes per profile) is a less trivial modification, but definitely feasible, and we encourage Premium Support subscribers to [reach out](../../../support/how-to-get-support.md) if you need this.
+
+Other Agones-related settings in the [Realm Instance Config](../../../configuration/reference/realm.md):
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `game-servers.agones.arguments` | `""` | Extra command-line arguments for the packaged game server |
+| `game-servers.agones.allocation-timeout-seconds` | `60` | How long to wait to allocate a server before giving up (e.g. if the fleet is at its maximum or there are no nodes available; consider a larger `bufferSize` if this happens due to demand) |
+| `game-servers.agones.fleet.eviction-safe` | `Never` | The Agones [eviction](https://agones.dev/site/docs/advanced/controlling-disruption/) setting for the fleet's game servers |
+| `game-servers.agones.fleet.game-server-container-details.resources` | 500Mi/90m requests, 1Gi/500m limits | Kubernetes resource requests and limits for each game server |
+| `game-servers.agones.fleet.autoscaler.policy.buffer` | `bufferSize: 1`, `minReplicas: 0`, `maxReplicas: 10` | The Buffer autoscaler policy: how many idle ("warm") servers to keep ready, and the fleet's bounds |
 
 ## Scaling Agones
 
-By default, the Agones system is set to not install the Ping or Allocator services; the Controller and Extensions services are also set to only have 1 replica. You can see the available configuration variables in `RedwoodBackend/config/node/default/deployment/dependencies/agones.yaml` to change these. For example, you may need to increase the number of replicas for the Controller service as your CCUs grow. [Reach out](../../../support/how-to-get-support.md) if you have questions about scaling Agones.
+Redwood installs Agones with its Helm chart (version `1.53.0` by default). By default, the Agones system is set to not install the Ping or Allocator services; the Controller and Extensions services are also set to only have 1 replica. You can see the available configuration variables in `RedwoodBackend/config/node/default/deployment/dependencies/agones.yaml` to change these. For example, you may need to increase the number of replicas for the Controller service as your CCUs grow. [Reach out](../../../support/how-to-get-support.md) if you have questions about scaling Agones.

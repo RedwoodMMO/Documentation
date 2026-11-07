@@ -22,15 +22,19 @@ We created this environment in the [Getting Started](../getting-started/installi
 
 ## Kubernetes Configuration Environment
 
-This configuration environment is used for local Kubernetes development, inheriting from the [base configuration](#base-configuration-environment). It defines common values for both local and cloud Kubernetes deployments, but is typically used directly for local deployments.
+This configuration environment is used for local Kubernetes development, inheriting from the provided `kubernetes` environment and the [base configuration](#base-configuration-environment) (`"parentNames": ["kubernetes", "project-name"]`). It defines common values for both local and cloud Kubernetes deployments (e.g. switching realms to the `agones` game server provider), but is typically used directly for local deployments.
 
-We created this environment in the [Deploying to Kubernetes | Deploying Locally](../deploying-to-kubernetes/deploying-locally.md#redwood-configuration) section; our example called this environment `redwood-demo-kubernetes`.
+We created this environment in the [Deploying to Kubernetes | Deploying Locally](../deploying-to-kubernetes/deploying-locally.md#redwood-configuration) section; our example called this environment `project-name-k8s`.
 
 ## Production Configuration Environment
 
-This configuration environment is used when deploying to the production hosting environment. This environment uses [multiple parent inheritance](./overview.md#multiple-parents) to inherit from the [Kubernetes configuration](#kubernetes-configuration-environment), the `production` environment, and the `cloud-do` environment.
+This configuration environment is used when deploying to the production hosting environment. This environment uses [multiple parent inheritance](./overview.md#multiple-parents) to inherit from the provided `production` environment and the [Kubernetes configuration](#kubernetes-configuration-environment) (`"parentNames": ["production", "project-name-k8s"]`). It's where your production-only values go: public hostnames, your managed database, real secrets (via the [secrets system](../features/secrets/overview.md)), your container registry, and your cluster's `kubeconfig`.
 
-We created this environment in the [Deploying to Kubernetes | Deploying to the Cloud](../deploying-to-kubernetes/deploying-remotely.md#redwood-configuration) section; our example called this environment `redwood-demo-production`.
+We created this environment in the [Deploying to Kubernetes | Deploying Remotely](../deploying-to-kubernetes/deploying-remotely.md#redwood-configuration) section.
+
+:::tip
+A staging environment that mirrors production but points at a separate cluster and database is usually just one more environment with `"parentNames": ["staging", "project-name-k8s"]` (or inheriting from your production environment and overriding the few values that differ).
+:::
 
 ## Local Configuration
 

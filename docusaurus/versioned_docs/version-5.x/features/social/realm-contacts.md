@@ -4,26 +4,31 @@ sidebar_position: 2
 
 # Realm Contacts
 
-Realm Contacts are a method for a `PlayerCharacter` to favorite another `PlayerCharacter` in the same Realm. This can be useful if the player has a favorite character to trade with or as an alternative to the [Friends](./friends.md) system but for PlayerCharacters.
+Realm Contacts are a way for a `PlayerCharacter` to favorite (or block) another `PlayerCharacter` in the same Realm. This can be useful if the player has a favorite character to trade with, or as an alternative to the [Friends](./friends.md) system that works with characters instead of player accounts.
 
-Contacts do not need to be accepted by the target character, but they be used to block a target character (including [text chat DMs](./text-chat.md#blocking)).
+How contacts differ from friends:
 
-Contacts can also have a player-defined description (e.g. `Iron Buyer`); the API will also return the actual target character's name.
+| | Friends | Realm Contacts |
+| --- | --- | --- |
+| Between | Player accounts (`PlayerIdentity`) | Characters (`PlayerCharacter`) |
+| Stored in | The Director (shared by all realms) | The Realm (only within that realm) |
+| Needs the other side to accept | Yes (a friend request) | No; it's a one-way list |
+| Online state | Yes | No |
 
-## Unreal Functions
+Contacts can also be used to block a target character, which also blocks [text chat DMs](./text-chat.md#blocking) from that character. Each contact can have a player-defined description (e.g. `Iron Buyer`); the API also returns the target character's actual name.
 
-The main functions for the Friend system are available via the `URedwoodClientGameSubsystem` in the plugin:
+## Unreal
 
-- `ListFriends`: Lists your friends; it takes a filter so you can show all relationships, just the pending invites, etc
-- `RequestFriend`: Initiate a friend request
-- `RemoveFriend`: Remove an existing friend
-- `RespondToFriendRequest`: Accept/deny a friend request or rescind your previous request; denying will allow them to send another request
-- `SetPlayerBlocked`: Blocks players from sending more friend requests
+Contacts belong to the **selected character**, so the player must be connected to a realm and have called **Set Selected Character** (see [Building the Main Menu](../../getting-started/building-the-main-menu.md#4-pick-or-create-a-character)) first. They're available from the client subsystem (`URedwoodClientGameSubsystem`), both in the menu and while in game:
 
-We've also provided a `SearchForPlayers` function where you can get the player ID used for requesting a friend. You can provide a username (what they use to login with) or nickname (defaults to the username, [Steam auth](../authentication/steam.md) will set this to their Steam alias)
+| Blueprint node | C++ | What it does |
+| --- | --- | --- |
+| **List Realm Contacts** | `ListRealmContacts(OnOutput)` | Returns an `FRedwoodListRealmContactsOutput` with `Contacts` and `BlockedContacts` arrays of `FRedwoodRealmContact` (`CharacterId`, `CharacterName`, and `Description`) |
+| **Add Realm Contact** | `AddRealmContact(OtherCharacterId, bBlocked, OnOutput)` | Adds (or updates) a contact. Set `bBlocked` to `true` to block the character instead. |
+| **Remove Realm Contact** | `RemoveRealmContact(OtherCharacterId, OnOutput)` | Removes the contact (and unblocks the character, if they were blocked) |
 
-## Online State
+Contacts are identified by character **ID**. If the player types a character name, look it up first with **Get Character Data** (`GetCharacterData`), which accepts a character name (exact, case-insensitive) and returns the character's `Id` (without their private data).
 
-Players can see the online state of _accepted_ friends. This state is non-null only in the `ListFriends` response. The struct has two booleans `bOnline` and `bPlaying`. `bOnline` means that they have at least logged into the Director. `bPlaying` can only be true if `bOnline` is true. `bPlaying == true` means they're in a game server and the `OnlineStateRealm` variable is valid. `bPlaying == false && bOnline == true` means they're not in a game server but connected to the Director (likely just sitting in the main menu/title screen).
-
-The `OnlineStateRealm` variable includes all of their current online status: `RealmName`, `ProxyId`, `ZoneName`, `ShardName`, and `CharacterId` (which is the `PlayerCharacter` that they're currently playing as).
+:::caution Known issue (5.0.0)
+The backend requires a `description` when adding a contact, but **Add Realm Contact** doesn't send one, so it currently fails with a validation error (`description is a required field`). **List Realm Contacts** and **Remove Realm Contact** work.
+:::

@@ -37,6 +37,14 @@ game-servers:
     version: ""
 ```
 
+A few other things to know about the Edgegap provider:
+
+- **Regions** come from Edgegap's location beacons, so a single realm can place servers anywhere Edgegap has a location. Clients ping the beacons and matchmaking uses those results.
+- **Cross-server [Sync Items](../../sync-items.md) are disabled** with Edgegap, since the servers aren't in your cluster to share Redis. Persistent Items, [World Data](../../data/game/world-data.md), and player data still work.
+- **The Realm Backend must be reachable from the internet.** Edgegap servers' sidecars connect to the realm's `backend.connection.external` host, which must be a public hostname (not an IP address). The `kubernetes` config environment sets it to an internal cluster hostname for Agones, so override it for realms that use Edgegap.
+- Extra command-line arguments for the server come from `game-servers.agones.arguments` (it's shared by every provider that runs packaged servers).
+- You can use Edgegap for only some profiles or zones by overriding the provider in your [game profile](../../../configuration/reference/game.md).
+
 ## Using Edgegap Game Servers in Development
 
 :::warning
@@ -69,7 +77,7 @@ However, you can use the `edgegap` provider with the Dev Initiator for testing v
     ngrok                                                                                                   (Ctrl+C to quit)
     Policy Management Examples http://ngrok.com/apigwexamples
     Session Status                online
-    Account                       Mike Seese (Plan: Free)
+    Account                       Your Name (Plan: Free)
     Update                        update available (version 3.14.0, Ctrl-U to update)
     Version                       3.3.2
     Latency                       -
@@ -82,46 +90,44 @@ However, you can use the `edgegap` provider with the Dev Initiator for testing v
 
 ### Configuration
 
-In your Realm Instance Config for your custom config environment (e.g. `realm/instances/default.yaml`), you'll need to specify the ngrok host so the Edgegap servers can connect to your local Dev Initiator:
+In your Realm Instance Config for your custom config environment (e.g. `realm/instances/default.yaml`), switch the provider to `edgegap` and specify the ngrok host so the Edgegap servers can connect to your local Dev Initiator:
 
-    ``` yaml
-    backend:
-      connection:
-        external:
-          host: "***.ngrok-free.app" # Copy the public **Forwarding** address from the `ngrok` terminal without the `https://`
-          port: "443" # Keep this at 443, not 3010
-          tls: true
-    ```
+``` yaml
+game-servers:
+  provider: "edgegap"
+
+backend:
+  connection:
+    external:
+      host: "***.ngrok-free.app" # Copy the public **Forwarding** address from the `ngrok` terminal without the `https://`
+      port: 443 # Keep this at 443, not 3010
+      tls: true
+```
 
 ### Test
 
 Run the backend like you did in the [getting started section](../../../getting-started/running-with-backend.md#launching-the-backend).
 
-You can now start a match like you did in the [getting started section](../../../getting-started/running-with-backend.md#running-the-game).
+You can now start a match from your main menu like you did in the [getting started section](../../../getting-started/running-with-backend.md).
 
-:::warning
+::::warning
   In some scenarios you can test with the Edgegap servers while running PIE, but you may have issues actually connecting the client to the server. You'll be in the loading screen about to connect to the server but then get kicked back to the main menu. Check the **Output Log** to see if you received a warning/error (search for `checksum mismatch`):
 
   ```
   LogNetPackageMap: Warning: GetObjectFromNetGUID: Network checksum mismatch.
   ```
 
-  In these cases, you'll need to package a Windows Client instead of PIE:
+  In these cases, you'll need to [package a Windows client](../../../deploying-to-kubernetes/packaging.md) (the same version as the server you uploaded to Edgegap) instead of using PIE.
 
-  ![Match package Windows client](/img/match-package-windows-client.jpg)
+  :::tip
+    A packaged client uses the **Director Uri** saved in your project's config files. If your packaged client can't connect to your local Dev Initiator, check that **Project Settings > Plugins > Redwood > Director Uri** is set to your Dev Initiator (e.g. `ws://director.localhost:3001`) in `Config/DefaultProjectSettings.ini`.
 
-  :::danger
-    If you are unable to connect to your local Dev Initiator from the packaged Windows client, it's likely because you didn't press the **Set as Default** button when changing the `Director Uri` setting in the **Project Settings** (because the guide did not instruct you to).
+    You can also add a `redwood.json` file next to the packaged game (e.g. `WindowsClient/YourProjectName/redwood.json`) with the below contents, and restart the client. The `redwood.json` file comes in handy if you need to point a pre-packaged client to a different Redwood Backend instance (e.g. running Redwood at an internet-less conference but using the latest production client). It can be disabled or required to be signed in the [Redwood settings](../../../unreal-reference/settings.md).
 
-    When you package the game, it uses what's defined in the `Config/DefaultGame.ini` (or the default) instead of what is listed in the **Project Settings** window. When you tested PIE in the [getting started section](../../../getting-started/running-with-backend.md#running-the-game), Unreal was just using a temporary change of the variable.
-
-    You have two options:
-      - Go back to the **Project Settings > Redwood** and press **Set as Default** to save the change to add the `:3001` port
-      - Add a `redwood.json` file in the packaged build at `WindowsClient/YourProjectName/redwood.json` with the below contents. Make sure to restart the game client after making this change. The `redwood.json` file comes in handy if you need to point a pre-packaged client to a different Redwood Backend instance (e.g. running Redwood at an internet-less conference but using the latest production client).
-
-          ``` json
-          {
-            "directorUri": "ws://director.localhost:3001"
-          }
-          ```
-:::
+    ``` json
+    {
+      "directorUri": "ws://director.localhost:3001"
+    }
+    ```
+  :::
+::::

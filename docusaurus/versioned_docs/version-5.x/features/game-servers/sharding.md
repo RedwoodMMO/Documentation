@@ -1,6 +1,6 @@
 # Sharding
 
-Every [zone](./zones.md) is composed of shards. Technically a shard is a [`GameServerInstance`](../../architecture/game-servers.md#gameserverinstance); every `GameServerInstance` is a shard, even if there will never be more than 1 shard for that zone. For example, match-based games/profiles have will only have 1 zone and 1 shard for that zone; remember the "zone" is the abstract configuration which makes the "shard" the actual running `GameServerInstance`.
+Every [zone](./zones.md) is composed of shards. Technically a shard is a [`GameServerInstance`](../../architecture/game-servers.md#gameserverinstance); every `GameServerInstance` is a shard, even if there will never be more than 1 shard for that zone. For example, match-based games/profiles will only have 1 zone and 1 shard for that zone; remember the "zone" is the abstract configuration which makes the "shard" the actual running `GameServerInstance`.
 
 :::note
 Check out Raph Koster's [article](https://www.raphkoster.com/2009/01/08/database-sharding-came-from-uo/) that describes the origin of the term `shard` in MMOs in Ultima Online as a lore element to back up their use of multiple parallel servers representing similar worlds:
@@ -14,4 +14,8 @@ The process of sharding, sometimes referenced in the backend/config as instancin
 The reason why we separated `num-players-to-add-shard` and `max-players-per-shard`, recommending that the former as a lesser soft-cap, is to allow members in the same party to still be able to follow their other party members into a soft-capped shard. It also allows players to manually switch their shard. This flexibility can prevent player frustration, but you may need to implement incentives for players in a soft-capped shard that's getting close to a hard-capped shard to switch shards to prevent queue times.
 :::
 
-To queue for a specific shard, the `realm:ticketing:join:queue` API call (or the Unreal plugin's `URedwoodClientGameSubsystem::JoinQueue` in C++ and BP) allows an optional shard name. If the shard name is not provided, they will queue for the least populated shard.
+Empty-shard checks run every `game-servers.shard-prune-interval` milliseconds (`5000` by default) in the [Realm Instance Config](../../configuration/reference/realm.md). The first shard of each zone (the first name in `game.shard-names`, `Alpha` by default) is the zone's main shard; it's never stopped for being empty, and it's restarted if it stops responding.
+
+When a player queues into a zone (with **Join Queue**, or when [transferring zones](./zones.md#transferring-zones)), Redwood picks the shard for them, preferring the one where your party is in or the least populated shard that has room. The underlying `realm:ticketing:join:queue` API also accepts an optional shard name to queue for a specific shard, but the Unreal plugin's `URedwoodClientGameSubsystem::JoinQueue` doesn't currently expose it.
+
+On the server, you can check which shard you're running with the `ShardName` property on the `URedwoodServerGameSubsystem` (e.g. `Alpha`). On clients, use the `URedwoodGameStateComponent`'s `GetServerDetails()`.

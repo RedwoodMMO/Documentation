@@ -5,7 +5,7 @@ sidebar_label: Overview
 
 # Secrets Providers
 
-There are lots of "secrets" that are generated to configure Redwood properly. These include passwords, API keys, and other sensitive information. Redwood's config system integrates a secrets system for you to store these secrets somewhere else, while allowing you to add non-sensitive references to version control.
+There are lots of "secrets" needed to configure Redwood properly. These include passwords, API keys, and other sensitive information. Redwood's config system integrates a secrets system so you can store these secrets somewhere else, while still committing non-sensitive references to version control.
 
 - **None** - Does nothing with the configured secret references, returning them as-is
 - [**Local**](./local.md) - Secrets are stored in a local file on disk
@@ -15,41 +15,80 @@ There are lots of "secrets" that are generated to configure Redwood properly. Th
 - [**GCP Secret Manager**](./gcp.md) - Secrets are stored in [Google Cloud Secret Manager](https://cloud.google.com/security/products/secret-manager)
 
 :::warning
-We no longer support HashiCorp's managed HCP Vault Secrets SaaS since it the service was [sunset on June 30, 2025.](https://developer.hashicorp.com/hcp/docs/vault-secrets/end-of-sale-announcement).
+We no longer support HashiCorp's managed HCP Vault Secrets SaaS since the service was [sunset on June 30, 2025](https://developer.hashicorp.com/hcp/docs/vault-secrets/end-of-sale-announcement). Setting the provider to `hcp-vault` throws an error.
 :::
 
 ## How to specify which provider is used?
 
-The config variable `secrets.provider` takes a string enum, which can be `none`,`local`,`vault`,`aws-secrets-manager`,`azure-key-vault`,or `gcp-secret-manager`. You can see the default defined as `none` in `RedwoodBackend/config/node/default/secrets.yaml`.
+The config variable `secrets.provider` takes a string enum, which can be `none`, `local`, `vault`, `aws-secrets-manager`, `azure-key-vault`, or `gcp-secret-manager`. The default (in `config/node/default/secrets.yaml`) is `none`.
 
-You can [override this variable](../../configuration/overview.md#customization) yourself in your own config environment.
+You can [override this variable](../../configuration/overview.md#customization) in your own config environment, for example in `config/node/your-game/secrets.yaml`:
+
+```yaml
+provider: "local"
+```
+
+See the [secrets config reference](../../configuration/reference/secrets-and-persistence.md) for every variable.
 
 ## Caching
 
-Secrets can sometimes be requested several times, especially during the backend initialization. For performance and sometimes cost reasons, the secret system implements a caching mechanism to store secret values in RAM reuse secret values for a certain duration before refreshing the cached value.
+Secrets can be requested several times, especially during backend initialization. For performance (and sometimes cost) reasons, the secrets system caches each secret value in memory for a certain duration before fetching it again.
 
-You can change the cache duration by changing the `secrets.cache-duration-seconds` value, which defaults to `1800` (or 30 minutes).
+You can change the cache duration with `secrets.cache-duration-seconds`, which defaults to `1800` (30 minutes). There's no hot reload; a rotated secret is picked up the next time its cached value expires.
 
 ## How to leverage the secrets system
 
-Secret references use the syntax `secret|<secret_name_reference>`. If the value of field that supports secrets doesn't have the `secret|` prefix, it won't be processed like a secret and the plaintext value will be used. For example:
+### Referencing a secret
+
+Secret references use the syntax `secret|<secret_name>`. If the value of a field that supports secrets doesn't have the `secret|` prefix, it's used as a plaintext value. For example:
 
 ``` yaml
 docker:
-  registry-auth:
-    password: "secret|do_registry_password"
+  registry:
+    auth:
+      password: "secret|do_registry_password"
 ```
 
-To optimize performance and reduce API calls, not all variables support secrets. If a variable supports it, you can see that it has the comment `# This can be a secret in the secrets provider` in the associated default value in `RedwoodBackend/config/node/default/**/*.yaml`.
+You can also embed one or more secrets inside a larger string by wrapping each reference in parentheses, `(secret|<secret_name>)`:
 
-You can add secrets support for a variable in each of the corresponding TypeScript code references:
+```yaml
+some-connection-string: "postgres://redwood:(secret|db_password)@db.example.com:5432/redwood"
+```
+
+If a config value references another value with `${...}` and that value is a secret reference, the reference is carried along, so it's resolved as a secret too. For example, the default `director.persistence.database.deployment-access.password` is `${director.persistence.database.runtime-access.password}`, so setting only the `runtime-access` password to a secret reference covers both.
+
+:::note
+All secrets are processed as strings. You'll need to do further parsing if you need them to be a different type.
+:::
+
+### Which variables support secrets?
+
+To keep things fast and reduce API calls, not every variable supports secrets; secret references are only resolved where the backend reads the value with the secrets system. In the default config files (`config/node/default/**/*.yaml`), these variables are marked with the comment `# This can be a secret in the secrets provider`. As of 5.0, that includes:
+
+| Area | Variables |
+| --- | --- |
+| Admin | `admin.default-user.password` |
+| Auth | `auth.admin.secret`, `auth.jwt.secret`, `auth.steam.api-key`, `auth.discord.client.secret`, `auth.twitch.client.secret` |
+| Director | `director.persistence.database.runtime-access.password`, `director.persistence.database.deployment-access.password`, `director.gateway.secret` |
+| Realms | `realm.instances.<key>.auth.secret` (but see this [known issue](../../configuration/reference/secrets-and-persistence.md) with `yarn deploy`), `...persistence.database.runtime-access.password`, `...persistence.database.deployment-access.password`, `...persistence.blobs.s3.connection.credentials.access-key-id`, `...secret-access-key`, `...game-servers.edgegap.credentials.api-token` |
+| Redis | `persistence.redis.password` |
+| Deployment | `docker.registry.auth.password`, `deployment.dns.cloudflare.credentials.token`, `deployment.pulumi.access-token`, `deployment.pulumi.encryption.passphrase`, `deployment.kubernetes.instances.<id>.kubeconfig`, the in-cluster PostgreSQL passwords, and the SeaweedFS keys |
+| Tests | `tests.artillery.key` |
+
+:::warning
+The email provider API keys (`email.sendgrid.api-key` and `email.zeptomail.api.key`) **don't** support secrets in 5.0; they're used as plaintext.
+:::
+
+### Adding secrets support to a variable
+
+If you have source access, you can add secrets support for a variable by changing the corresponding TypeScript code that reads it:
 
 ``` diff
-- config.get<string>("docker.registry-auth.password"); // note that this is a synchronous function
-+ await config.getWithSecrets<string>("docker.registry-auth.password"); // note this is an asynchronous function
+- config.get<string>("docker.registry.auth.password"); // note that this is a synchronous function
++ await config.getWithSecrets<string>("docker.registry.auth.password"); // note this is an asynchronous function
 ```
 
-You can fetch secrets on an entire object too, and all the child fields with the `secret|` prefix will be assessed:
+You can fetch secrets for an entire object too, and all the child fields with the `secret|` prefix will be resolved:
 
 ``` ts
 interface Auth {
@@ -61,6 +100,22 @@ interface Auth {
 const bothKeyAndSecretCanBeSecrets = await config.getWithSecrets<Auth>("my-auth-key");
 ```
 
-:::note
-All secrets are processed as strings. You will need to further processing/parsing if you need them to be in a different type.
-:::
+## Secrets in Kubernetes
+
+When you [deploy to Kubernetes](../../deploying-to-kubernetes/prerequisites.md), the deployment scripts make the provider's credentials available to the backend pods for you:
+
+| Provider | What the deployment does |
+| --- | --- |
+| `local` | Copies your secrets file into a Kubernetes Secret and mounts it in each pod |
+| `vault`, `aws-secrets-manager`, `azure-key-vault` | Copies the provider's authentication environment variables (from the machine running the deployment) into the pods |
+| `gcp-secret-manager` | Mounts the credentials file in each pod |
+
+## Checking for Placeholder Secrets
+
+Production-like environments (anything inheriting from `staging`, which includes `production`) have `environment.check-for-default-secrets.enabled` set to `true`. When it's on, `yarn deploy` refuses to deploy while any of the listed secret variables still resolves to the placeholder value shipped in `config/node/default` (e.g. the `admin` admin password or the all-zeros realm secret). You can run the same check yourself with:
+
+```bash
+yarn check-secrets <your-config-env>
+```
+
+See the [environment config reference](../../configuration/reference/environment.md) for the list of checked keys.
